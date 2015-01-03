@@ -2,12 +2,21 @@ package com.martin.knowledgebase;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import java.security.GeneralSecurityException;
+
+import static com.tozny.crypto.android.AesCbcWithIntegrity.generateSalt;
+import static com.tozny.crypto.android.AesCbcWithIntegrity.saltString;
 
 
 public class LoginActivity extends Activity {
@@ -18,7 +27,13 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.title_activity_login));
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, new FragmentSetPassword()).commit();
+            SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+            if (prefs.contains("salt")) {
+                getFragmentManager().beginTransaction().add(R.id.container, new FragmentCheckPassword()).commit();
+            }
+            else {
+                getFragmentManager().beginTransaction().add(R.id.container, new FragmentSetPassword()).commit();
+            }
         }
     }
 
@@ -39,6 +54,11 @@ public class LoginActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            // TODO: Remove debug code
+            SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.commit();
             return true;
         }
 
@@ -50,10 +70,54 @@ public class LoginActivity extends Activity {
         public FragmentSetPassword() {
         }
 
+        private EditText mFirst, mSecond;
+        private Button mGenerate;
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_setpassword, container, false);
+            mFirst = (EditText) rootView.findViewById(R.id.etFirst);
+            mSecond = (EditText) rootView.findViewById(R.id.etSecond);
+            mGenerate = (Button) rootView.findViewById(R.id.bEnter);
             return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            if (savedInstanceState != null) {
+                mFirst.setText(savedInstanceState.getString("first"));
+                mSecond.setText(savedInstanceState.getString("second"));
+            }
+
+            mGenerate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mFirst.getText().toString().contentEquals(mSecond.getText().toString()) && !mFirst.getText().toString().contentEquals("")) {
+                        try {
+                            String salt = saltString(generateSalt());
+                            SharedPreferences prefs = getActivity().getSharedPreferences("KB", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("salt", salt);
+                            editor.commit();
+                            // TODO: Get the password to MainActivity via an Intent
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else {
+                        // TODO: Have snackbar pop up
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString("first", mFirst.getText().toString());
+            outState.putString("second", mSecond.getText().toString());
         }
     }
 
@@ -62,11 +126,37 @@ public class LoginActivity extends Activity {
         public FragmentCheckPassword() {
         }
 
+        private EditText mFirst;
+        private Button mLogin;
+
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_checkpassword, container, false);
+            mFirst = (EditText) rootView.findViewById(R.id.etFirst);
+            mLogin = (Button) rootView.findViewById(R.id.bEnter);
             return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            if (savedInstanceState != null) {
+                mFirst.setText(savedInstanceState.getString("first"));
+            }
+
+            mLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: Get the password to MainActivity via an Intent
+                }
+            });
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putString("first", mFirst.getText().toString());
         }
     }
 }
