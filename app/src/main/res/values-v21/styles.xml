@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.Light">
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <!-- Flag indicating whether this Window's transition should overlap with
+             the exiting transition of the calling Activity. -->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+    </style>
+    <style name="MainTheme" parent="AppTheme">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primaryDark</item>
+        <item name="android:colorAccent">@color/accent</item>
     </style>
 </resources>
