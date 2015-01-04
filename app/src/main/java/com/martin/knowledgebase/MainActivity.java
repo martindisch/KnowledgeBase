@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
                     super.run();
                     try {
                         ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                        String serData = stringify(entries);
+                        String serData = Entry.stringify(entries);
 
                         progress.setMessage("Encrypting");
                         AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
@@ -122,28 +122,4 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String stringify(ArrayList<Entry> entries) {
-        String data = "";
-        int size = entries.size();
-        for (int i = 0; i < (size - 1); i++) {
-            data += entries.get(i).getTitle() + "-INNER-";
-            data += entries.get(i).getText() + "-INNER-";
-            data += entries.get(i).getDate() + "-OUTER-";
-        }
-        data += entries.get(size - 1).getTitle() + "-INNER-";
-        data += entries.get(size - 1).getText() + "-INNER-";
-        data += entries.get(size - 1).getDate();
-        return data;
-    }
-
-    private ArrayList<Entry> listify(String data) {
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-        String[] sEntries = data.split("-OUTER-");
-        String[] sEntry;
-        for (int i = 0; i < sEntries.length; i++) {
-            sEntry = sEntries[i].split("-INNER-");
-            entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2]));
-        }
-        return entries;
-    }
 }
