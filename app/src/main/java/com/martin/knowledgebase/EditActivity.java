@@ -1,33 +1,29 @@
 package com.martin.knowledgebase;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 
 
-public class MainActivity extends Activity {
+public class EditActivity extends Activity {
 
-    private String password;
-    private LinearLayout container;
+    private EditText mTitle, mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Intent i = getIntent();
-        password = i.getStringExtra("password");
-        container = (LinearLayout) findViewById(R.id.container);
+        setContentView(R.layout.activity_edit);
+        mTitle = (EditText) findViewById(R.id.etTitle);
+        mText = (EditText) findViewById(R.id.etText);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
 
@@ -39,7 +35,13 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_done) {
+            if (!mTitle.getText().toString().contentEquals("") && !mText.getText().toString().contentEquals("")) {
+
+            }
+            else {
+                // TODO: Snackbar popup
+            }
             return true;
         }
 

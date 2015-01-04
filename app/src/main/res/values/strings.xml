@@ -9,5 +9,9 @@
     <string name="login">Login</string>
     <string name="save">Save</string>
     <string name="enter_password">Enter password</string>
+    <string name="title_activity_edit">Edit Entry</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
+    <string name="done">Done</string>
 
 </resources>
