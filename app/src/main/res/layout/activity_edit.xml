@@ -30,8 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/etText"
-        android:inputType="textCapSentences"
-        android:imeOptions="actionNext"
-        android:layout_below="@id/tvText"/>
+        android:gravity="top"
+        android:inputType="textCapSentences|textMultiLine"
+        android:layout_below="@id/tvText"
+        />
 
 </RelativeLayout>

@@ -152,10 +152,15 @@ public class LoginActivity extends Activity {
             mLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), MainActivity.class);
-                    i.putExtra("password", mFirst.getText().toString());
-                    startActivity(i);
-                    getActivity().finish();
+                    if (!mFirst.getText().toString().contentEquals("")) {
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        i.putExtra("password", mFirst.getText().toString());
+                        startActivity(i);
+                        getActivity().finish();
+                    }
+                    else {
+                        // TODO: snackbar
+                    }
                 }
             });
         }

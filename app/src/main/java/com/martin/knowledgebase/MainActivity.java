@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ public class MainActivity extends Activity {
     private String password;
     private LinearLayout container;
     private TextView mEntries;
+    private ImageButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,14 @@ public class MainActivity extends Activity {
         password = i.getStringExtra("password");
         container = (LinearLayout) findViewById(R.id.container);
         mEntries = (TextView) findViewById(R.id.tvEntries);
+        mFab = (ImageButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, EditActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
