@@ -6,13 +6,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
 
     private String password;
     private LinearLayout container;
+    private TextView mEntries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +26,25 @@ public class MainActivity extends Activity {
         Intent i = getIntent();
         password = i.getStringExtra("password");
         container = (LinearLayout) findViewById(R.id.container);
+        mEntries = (TextView) findViewById(R.id.tvEntries);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("FFF", "Resuming...");
+        PlainStorage store = PlainStorage.getInstance();
+        if (store.isNew()) {
+            // load
+        }
+        ArrayList<Entry> entries = store.getmEntries();
+        String all = "";
+        for (Entry e : entries) {
+            all += e.getTitle() + " - " + e.getDate() + "\n";
+            all += e.getText() + "\n\n";
+        }
+        mEntries.setText(all);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
