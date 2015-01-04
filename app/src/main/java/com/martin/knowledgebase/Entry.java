@@ -1,11 +1,23 @@
 package com.martin.knowledgebase;
 
+import android.text.format.Time;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class Entry implements Serializable {
-    private String date;
     private String title;
     private String text;
+    private String date;
+
+    public Entry(String title, String text, String date) {
+        this.title = title;
+        this.text = text;
+        this.date = date;
+    }
 
     public void setDate(String date) {
         this.date = date;
@@ -29,5 +41,10 @@ public class Entry implements Serializable {
 
     public String getText() {
         return text;
+    }
+
+    public static String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd", Locale.US);
+        return sdf.format(new Date());
     }
 }
