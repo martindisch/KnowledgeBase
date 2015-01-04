@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -44,8 +43,7 @@ public class EditActivity extends Activity {
                 entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Entry.getCurrentDate()));
                 PlainStorage.getInstance().setmEntries(entries);
                 finish();
-            }
-            else {
+            } else {
                 // TODO: Snackbar popup
             }
             return true;

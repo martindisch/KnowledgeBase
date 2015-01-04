@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
+import static com.tozny.crypto.android.AesCbcWithIntegrity.decryptString;
 import static com.tozny.crypto.android.AesCbcWithIntegrity.encrypt;
 import static com.tozny.crypto.android.AesCbcWithIntegrity.generateKeyFromPassword;
 
@@ -34,7 +35,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
-        mPassword = i.getStringExtra("Password");
+        mPassword = i.getStringExtra("password");
         container = (LinearLayout) findViewById(R.id.container);
         mEntries = (TextView) findViewById(R.id.tvEntries);
         mFab = (ImageButton) findViewById(R.id.fab);
@@ -51,16 +52,62 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         PlainStorage store = PlainStorage.getInstance();
-        if (store.isNew()) {
-            // load
+        final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+        if (store.isNew() && prefs.contains("data")) {
+            final String salt = prefs.getString("salt", "Oh crap");
+            final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Reading data", true);
+            new Thread() {
+
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        String data = prefs.getString("data", "Oh crap");
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage("Decrypting");
+                            }
+                        });
+                        AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
+                        String plainText = decryptString(new AesCbcWithIntegrity.CipherTextIvMac(data), key);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage("Crunching data");
+                            }
+                        });
+                        PlainStorage.getInstance().setmEntries(Entry.listify(plainText));
+                        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+                        String all = "";
+                        for (Entry e : entries) {
+                            all += e.getTitle() + " - " + e.getDate() + "\n";
+                            all += e.getText() + "\n\n";
+                        }
+                        final String text = all;
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                mEntries.setText(text);
+                                progress.dismiss();
+                            }
+                        });
+                        // TODO: Error handling
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            }.start();
         }
-        ArrayList<Entry> entries = store.getmEntries();
-        String all = "";
-        for (Entry e : entries) {
-            all += e.getTitle() + " - " + e.getDate() + "\n";
-            all += e.getText() + "\n\n";
-        }
-        mEntries.setText(all);
+
     }
 
     @Override
@@ -81,7 +128,7 @@ public class MainActivity extends Activity {
         if (id == R.id.action_save) {
             final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
             final String salt = prefs.getString("salt", "Oh crap");
-            final ProgressDialog progress = ProgressDialog.show(this, "Encrypting", "Crunching data", true);
+            final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Crunching data", true);
             new Thread() {
 
                 @Override
@@ -91,11 +138,21 @@ public class MainActivity extends Activity {
                         ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
                         String serData = Entry.stringify(entries);
 
-                        progress.setMessage("Encrypting");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage("Encrypting");
+                            }
+                        });
                         AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
                         AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(serData, key);
 
-                        progress.setMessage("Storing");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage("Storing");
+                            }
+                        });
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("data", civ.toString());
                         editor.commit();

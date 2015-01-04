@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,8 +30,7 @@ public class LoginActivity extends Activity {
             SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
             if (prefs.contains("salt")) {
                 getFragmentManager().beginTransaction().add(R.id.container, new FragmentCheckPassword()).commit();
-            }
-            else {
+            } else {
                 getFragmentManager().beginTransaction().add(R.id.container, new FragmentSetPassword()).commit();
             }
         }
@@ -68,11 +66,10 @@ public class LoginActivity extends Activity {
 
     public static class FragmentSetPassword extends Fragment {
 
-        public FragmentSetPassword() {
-        }
-
         private EditText mFirst, mSecond;
         private Button mGenerate;
+        public FragmentSetPassword() {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,8 +106,7 @@ public class LoginActivity extends Activity {
                         } catch (GeneralSecurityException e) {
                             e.printStackTrace();
                         }
-                    }
-                    else {
+                    } else {
                         // TODO: Have snackbar pop up
                     }
                 }
@@ -127,11 +123,10 @@ public class LoginActivity extends Activity {
 
     public static class FragmentCheckPassword extends Fragment {
 
-        public FragmentCheckPassword() {
-        }
-
         private EditText mFirst;
         private Button mLogin;
+        public FragmentCheckPassword() {
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -149,6 +144,7 @@ public class LoginActivity extends Activity {
                 mFirst.setText(savedInstanceState.getString("first"));
             }
 
+            // TODO: Check password integrity
             mLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,8 +153,7 @@ public class LoginActivity extends Activity {
                         i.putExtra("password", mFirst.getText().toString());
                         startActivity(i);
                         getActivity().finish();
-                    }
-                    else {
+                    } else {
                         // TODO: snackbar
                     }
                 }

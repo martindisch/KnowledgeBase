@@ -126,7 +126,7 @@ public class AesCbcWithIntegrity {
      *
      * @return The AES & HMAC keys.
      * @throws java.security.GeneralSecurityException if AES is not implemented on this system,
-     *                                  or a suitable RNG is not available
+     *                                                or a suitable RNG is not available
      */
     public static SecretKeys generateKey() throws GeneralSecurityException {
         fixPrng();
@@ -151,7 +151,7 @@ public class AesCbcWithIntegrity {
      * @param password The password to derive the keys from.
      * @return The AES & HMAC keys.
      * @throws java.security.GeneralSecurityException if AES is not implemented on this system,
-     *                                  or a suitable RNG is not available
+     *                                                or a suitable RNG is not available
      */
     public static SecretKeys generateKeyFromPassword(String password, byte[] salt) throws GeneralSecurityException {
         fixPrng();
@@ -240,8 +240,8 @@ public class AesCbcWithIntegrity {
      *                   will be serialized with UTF-8
      * @param secretKeys The AES & HMAC keys with which to encrypt
      * @return a tuple of the IV, ciphertext, mac
-     * @throws java.security.GeneralSecurityException     if AES is not implemented on this system
-     * @throws java.io.UnsupportedEncodingException if UTF-8 is not supported in this system
+     * @throws java.security.GeneralSecurityException if AES is not implemented on this system
+     * @throws java.io.UnsupportedEncodingException   if UTF-8 is not supported in this system
      */
     public static CipherTextIvMac encrypt(String plaintext, SecretKeys secretKeys)
             throws UnsupportedEncodingException, GeneralSecurityException {
@@ -255,8 +255,8 @@ public class AesCbcWithIntegrity {
      * @param plaintext  The bytes that will be encrypted
      * @param secretKeys The AES & HMAC keys with which to encrypt
      * @return a tuple of the IV, ciphertext, mac
-     * @throws java.security.GeneralSecurityException     if AES is not implemented on this system
-     * @throws java.io.UnsupportedEncodingException if the specified encoding is invalid
+     * @throws java.security.GeneralSecurityException if AES is not implemented on this system
+     * @throws java.io.UnsupportedEncodingException   if the specified encoding is invalid
      */
     public static CipherTextIvMac encrypt(String plaintext, SecretKeys secretKeys, String encoding)
             throws UnsupportedEncodingException, GeneralSecurityException {
@@ -318,8 +318,8 @@ public class AesCbcWithIntegrity {
      * @param secretKeys The AES & HMAC keys
      * @param encoding   The string encoding to use to decode the bytes after decryption
      * @return A string derived from the decrypted bytes (not base64 encoded)
-     * @throws java.security.GeneralSecurityException     if AES is not implemented on this system
-     * @throws java.io.UnsupportedEncodingException if the encoding is unsupported
+     * @throws java.security.GeneralSecurityException if AES is not implemented on this system
+     * @throws java.io.UnsupportedEncodingException   if the encoding is unsupported
      */
     public static String decryptString(CipherTextIvMac civ, SecretKeys secretKeys, String encoding)
             throws UnsupportedEncodingException, GeneralSecurityException {
@@ -333,8 +333,8 @@ public class AesCbcWithIntegrity {
      * @param secretKeys The AES & HMAC keys
      * @return A string derived from the decrypted bytes, which are interpreted
      * as a UTF-8 String
-     * @throws java.security.GeneralSecurityException     if AES is not implemented on this system
-     * @throws java.io.UnsupportedEncodingException if UTF-8 is not supported
+     * @throws java.security.GeneralSecurityException if AES is not implemented on this system
+     * @throws java.io.UnsupportedEncodingException   if UTF-8 is not supported
      */
     public static String decryptString(CipherTextIvMac civ, SecretKeys secretKeys)
             throws UnsupportedEncodingException, GeneralSecurityException {

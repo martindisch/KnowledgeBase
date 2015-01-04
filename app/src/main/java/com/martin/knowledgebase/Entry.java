@@ -1,11 +1,7 @@
 package com.martin.knowledgebase;
 
-import android.text.format.Time;
-
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -18,30 +14,6 @@ public class Entry {
         this.title = title;
         this.text = text;
         this.date = date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getText() {
-        return text;
     }
 
     public static String getCurrentDate() {
@@ -72,6 +44,30 @@ public class Entry {
             entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2]));
         }
         return entries;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override

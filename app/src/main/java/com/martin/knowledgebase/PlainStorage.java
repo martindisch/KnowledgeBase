@@ -12,29 +12,28 @@ public class PlainStorage {
     private PlainStorage() {
     }
 
+    public static synchronized PlainStorage getInstance() {
+        if (instance == null) {
+            instance = new PlainStorage();
+            instance.mNewInstance = true;
+            instance.mEntries = new ArrayList<Entry>();
+        } else {
+            instance.mNewInstance = false;
+        }
+        return instance;
+    }
+
     public boolean isNew() {
         boolean before = mNewInstance;
         mNewInstance = false;
         return before;
     }
 
-    public static synchronized PlainStorage getInstance(){
-        if(instance == null){
-            instance = new PlainStorage();
-            instance.mNewInstance = true;
-            instance.mEntries = new ArrayList<Entry>();
-        }
-        else {
-            instance.mNewInstance = false;
-        }
-        return instance;
+    public ArrayList<Entry> getmEntries() {
+        return mEntries;
     }
 
     public void setmEntries(ArrayList<Entry> mEntries) {
         this.mEntries = mEntries;
-    }
-
-    public ArrayList<Entry> getmEntries() {
-        return mEntries;
     }
 }

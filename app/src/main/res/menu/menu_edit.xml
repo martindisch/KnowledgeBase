@@ -1,7 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.martin.knowledgebase.EditActivity">
-    <item android:id="@+id/action_done" android:title="@string/done"
-        android:orderInCategory="100" android:showAsAction="always"
-        android:icon="@drawable/ic_done_white_48dp"/>
+    <item
+        android:id="@+id/action_done"
+        android:icon="@drawable/ic_done_white_48dp"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/done" />
 </menu>
