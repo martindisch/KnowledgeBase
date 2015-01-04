@@ -80,18 +80,10 @@ public class MainActivity extends Activity {
                             }
                         });
                         PlainStorage.getInstance().setmEntries(Entry.listify(plainText));
-                        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                        String all = "";
-                        for (Entry e : entries) {
-                            all += e.getTitle() + " - " + e.getDate() + "\n";
-                            all += e.getText() + "\n\n";
-                        }
-                        final String text = all;
+                        displayData();
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
-                                mEntries.setText(text);
                                 progress.dismiss();
                             }
                         });
@@ -107,7 +99,33 @@ public class MainActivity extends Activity {
 
             }.start();
         }
+        else {
+            displayData();
+        }
 
+    }
+
+    private void displayData() {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+                String all = "";
+                for (Entry e : entries) {
+                    all += e.getTitle() + " - " + e.getDate() + "\n";
+                    all += e.getText() + "\n\n";
+                }
+                final String text = all;
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mEntries.setText(text);
+                    }
+                });
+            }
+        }.run();
     }
 
     @Override
