@@ -33,6 +33,7 @@
         android:gravity="top"
         android:inputType="textCapSentences|textMultiLine"
         android:layout_below="@id/tvText"
+        android:scrollbars="vertical"
         />
 
 </RelativeLayout>

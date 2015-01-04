@@ -1,23 +1,30 @@
 package com.martin.knowledgebase;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tozny.crypto.android.AesCbcWithIntegrity;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+
+import static com.tozny.crypto.android.AesCbcWithIntegrity.encrypt;
+import static com.tozny.crypto.android.AesCbcWithIntegrity.generateKeyFromPassword;
 
 
 public class MainActivity extends Activity {
 
-    private String password;
+    private String mPassword;
     private LinearLayout container;
     private TextView mEntries;
     private ImageButton mFab;
@@ -27,7 +34,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
-        password = i.getStringExtra("password");
+        mPassword = i.getStringExtra("Password");
         container = (LinearLayout) findViewById(R.id.container);
         mEntries = (TextView) findViewById(R.id.tvEntries);
         mFab = (ImageButton) findViewById(R.id.fab);
@@ -43,7 +50,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("FFF", "Resuming...");
         PlainStorage store = PlainStorage.getInstance();
         if (store.isNew()) {
             // load
@@ -72,10 +78,72 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_save) {
+            final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+            final String salt = prefs.getString("salt", "Oh crap");
+            final ProgressDialog progress = ProgressDialog.show(this, "Encrypting", "Crunching data", true);
+            new Thread() {
+
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+                        String serData = stringify(entries);
+
+                        progress.setMessage("Encrypting");
+                        AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
+                        AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(serData, key);
+
+                        progress.setMessage("Storing");
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("data", civ.toString());
+                        editor.commit();
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            progress.dismiss();
+                        }
+                    });
+                }
+
+            }.start();
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String stringify(ArrayList<Entry> entries) {
+        String data = "";
+        int size = entries.size();
+        for (int i = 0; i < (size - 1); i++) {
+            data += entries.get(i).getTitle() + "-INNER-";
+            data += entries.get(i).getText() + "-INNER-";
+            data += entries.get(i).getDate() + "-OUTER-";
+        }
+        data += entries.get(size - 1).getTitle() + "-INNER-";
+        data += entries.get(size - 1).getText() + "-INNER-";
+        data += entries.get(size - 1).getDate();
+        return data;
+    }
+
+    private ArrayList<Entry> listify(String data) {
+        ArrayList<Entry> entries = new ArrayList<Entry>();
+        String[] sEntries = data.split("-OUTER-");
+        String[] sEntry;
+        for (int i = 0; i < sEntries.length; i++) {
+            sEntry = sEntries[i].split("-INNER-");
+            entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2]));
+        }
+        return entries;
     }
 }
