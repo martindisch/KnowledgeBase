@@ -51,7 +51,6 @@ public class MainActivity extends Activity {
         final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
         if (store.isNew() && prefs.contains("data")) {
             Log.i("FFF", "isNew");
-            final String salt = prefs.getString("salt", "Oh crap");
             final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Decrypting", true);
             new Thread() {
 
@@ -67,7 +66,7 @@ public class MainActivity extends Activity {
                             progress.setMessage("Crunching data");
                         }
                     });
-                    PlainStorage.getInstance().setmEntries(Entry.listify(plainText));
+                    PlainStorage.getInstance().setmEntries(Util.listify(plainText));
                     displayData();
                     runOnUiThread(new Runnable() {
                         @Override

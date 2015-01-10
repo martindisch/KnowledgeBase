@@ -7,7 +7,10 @@ import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.tozny.crypto.android.AesCbcWithIntegrity.decryptString;
 import static com.tozny.crypto.android.AesCbcWithIntegrity.encrypt;
@@ -37,7 +40,7 @@ public class Util {
 
         try {
             AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
-            AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(Entry.stringify(entries), key);
+            AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("data", civ.toString());
             editor.commit();
@@ -47,5 +50,35 @@ public class Util {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd", Locale.US);
+        return sdf.format(new Date());
+    }
+
+    public static String stringify(ArrayList<Entry> entries) {
+        String data = "";
+        int size = entries.size();
+        for (int i = 0; i < (size - 1); i++) {
+            data += entries.get(i).getTitle() + "-INNER-";
+            data += entries.get(i).getText() + "-INNER-";
+            data += entries.get(i).getDate() + "-OUTER-";
+        }
+        data += entries.get(size - 1).getTitle() + "-INNER-";
+        data += entries.get(size - 1).getText() + "-INNER-";
+        data += entries.get(size - 1).getDate();
+        return data;
+    }
+
+    public static ArrayList<Entry> listify(String data) {
+        ArrayList<Entry> entries = new ArrayList<Entry>();
+        String[] sEntries = data.split("-OUTER-");
+        String[] sEntry;
+        for (int i = 0; i < sEntries.length; i++) {
+            sEntry = sEntries[i].split("-INNER-");
+            entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2]));
+        }
+        return entries;
     }
 }

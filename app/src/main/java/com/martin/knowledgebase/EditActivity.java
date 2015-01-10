@@ -40,7 +40,7 @@ public class EditActivity extends Activity {
         if (id == R.id.action_done) {
             if (!mTitle.getText().toString().contentEquals("") && !mText.getText().toString().contentEquals("")) {
                 ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Entry.getCurrentDate()));
+                entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
                 PlainStorage.getInstance().setmEntries(entries);
                 finish();
             } else {
