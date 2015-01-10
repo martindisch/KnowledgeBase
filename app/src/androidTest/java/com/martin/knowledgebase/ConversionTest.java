@@ -18,7 +18,7 @@ public class ConversionTest extends AndroidTestCase {
     }
 
     public void testStringify() throws Exception {
-        String string = Entry.stringify(entries);
+        String string = Util.stringify(entries);
         assertEquals("Not the same:", "Title-INNER-Text here-INNER-2015-01-04-OUTER-Title2-INNER-Text here2-INNER-2015-01-05-OUTER-Title3-INNER-Text here3-INNER-2015-01-06", string);
     }
 
@@ -41,7 +41,7 @@ public class ConversionTest extends AndroidTestCase {
     }
 
     public void testListify() throws Exception {
-        ArrayList<Entry> second = Entry.listify(Entry.stringify(entries));
+        ArrayList<Entry> second = Util.listify(Util.stringify(entries));
         assertEquals("Not the same:", entries, second);
     }
 }

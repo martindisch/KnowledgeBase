@@ -6,6 +6,6 @@ import android.util.Log;
 public class EntryTest extends AndroidTestCase {
 
     public void testDate() throws Exception {
-        Log.d("FFF", Entry.getCurrentDate());
+        Log.d("FFF", Util.getCurrentDate());
     }
 }

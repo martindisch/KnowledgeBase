@@ -52,6 +52,40 @@ public class Util {
         }
     }
 
+    public static String stringDecrypt(Context context, String password, String name) {
+        SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
+        String plainText = "Oh crap";
+        try {
+            AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
+            plainText = decryptString(new AesCbcWithIntegrity.CipherTextIvMac(prefs.getString(name, "Oh crap")), key);
+        } catch (GeneralSecurityException e) {
+            // TODO: error handling
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return plainText;
+    }
+
+    public static void stringEncrypt(Context context, String password, String name, String content) {
+        SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
+
+        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+
+        try {
+            AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
+            AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(content, key);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(name, civ.toString());
+            editor.commit();
+            // TODO: error handling
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd", Locale.US);
         return sdf.format(new Date());

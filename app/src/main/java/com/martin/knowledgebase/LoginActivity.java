@@ -99,6 +99,7 @@ public class LoginActivity extends Activity {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("salt", salt);
                             editor.commit();
+                            Util.stringEncrypt(getActivity(), mFirst.getText().toString(), "pwcheck", "This should equal itself.");
                             Intent i = new Intent(getActivity(), MainActivity.class);
                             i.putExtra("password", mFirst.getText().toString());
                             startActivity(i);
