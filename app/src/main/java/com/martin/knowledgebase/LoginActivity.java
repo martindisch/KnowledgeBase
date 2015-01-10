@@ -2,6 +2,7 @@ package com.martin.knowledgebase;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.security.GeneralSecurityException;
 
@@ -68,6 +70,7 @@ public class LoginActivity extends Activity {
 
         private EditText mFirst, mSecond;
         private Button mGenerate;
+
         public FragmentSetPassword() {
         }
 
@@ -99,11 +102,27 @@ public class LoginActivity extends Activity {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("salt", salt);
                             editor.commit();
-                            Util.stringEncrypt(getActivity(), mFirst.getText().toString(), "pwcheck", "This should equal itself.");
-                            Intent i = new Intent(getActivity(), MainActivity.class);
-                            i.putExtra("password", mFirst.getText().toString());
-                            startActivity(i);
-                            getActivity().finish();
+                            // TODO: More efficient way of checking password, e.g. hashing function
+                            final ProgressDialog progress = ProgressDialog.show(getActivity(), "Saving", "Saving password", true);
+                            new Thread() {
+
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    Util.stringEncrypt(getActivity(), mFirst.getText().toString(), "pwcheck", "This should equal itself.");
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progress.dismiss();
+                                            Intent i = new Intent(getActivity(), MainActivity.class);
+                                            i.putExtra("password", mFirst.getText().toString());
+                                            startActivity(i);
+                                            getActivity().finish();
+                                        }
+                                    });
+                                }
+
+                            }.start();
                         } catch (GeneralSecurityException e) {
                             e.printStackTrace();
                         }
@@ -126,6 +145,7 @@ public class LoginActivity extends Activity {
 
         private EditText mFirst;
         private Button mLogin;
+
         public FragmentCheckPassword() {
         }
 
@@ -145,15 +165,36 @@ public class LoginActivity extends Activity {
                 mFirst.setText(savedInstanceState.getString("first"));
             }
 
-            // TODO: Check password integrity
             mLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!mFirst.getText().toString().contentEquals("")) {
-                        Intent i = new Intent(getActivity(), MainActivity.class);
-                        i.putExtra("password", mFirst.getText().toString());
-                        startActivity(i);
-                        getActivity().finish();
+                        final ProgressDialog progress = ProgressDialog.show(getActivity(), "Checking", "Checking password", true);
+                        new Thread() {
+
+                            @Override
+                            public void run() {
+                                super.run();
+                                final String decrypted = Util.stringDecrypt(getActivity(), mFirst.getText().toString(), "pwcheck");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progress.dismiss();
+                                        if (decrypted.contentEquals("This should equal itself.")) {
+                                            Intent i = new Intent(getActivity(), MainActivity.class);
+                                            i.putExtra("password", mFirst.getText().toString());
+                                            startActivity(i);
+                                            getActivity().finish();
+                                        }
+                                        else {
+                                            // TODO: snackbar
+                                            Toast.makeText(getActivity(), "Wrong password", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+
+                        }.start();
                     } else {
                         // TODO: snackbar
                     }
