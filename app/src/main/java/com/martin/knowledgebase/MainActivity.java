@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,15 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tozny.crypto.android.AesCbcWithIntegrity;
-
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-
-import static com.tozny.crypto.android.AesCbcWithIntegrity.decryptString;
-import static com.tozny.crypto.android.AesCbcWithIntegrity.encrypt;
-import static com.tozny.crypto.android.AesCbcWithIntegrity.generateKeyFromPassword;
 
 
 public class MainActivity extends Activity {
@@ -33,7 +26,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: savedInstanceState data (Move everything from onResume here)
         setContentView(R.layout.activity_main);
+        Log.i("FFF", "onCreate");
         Intent i = getIntent();
         mPassword = i.getStringExtra("password");
         container = (LinearLayout) findViewById(R.id.container);
@@ -51,61 +46,47 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("FFF", "onResume");
         PlainStorage store = PlainStorage.getInstance();
         final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
         if (store.isNew() && prefs.contains("data")) {
+            Log.i("FFF", "isNew");
             final String salt = prefs.getString("salt", "Oh crap");
-            final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Reading data", true);
+            final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Decrypting", true);
             new Thread() {
 
                 @Override
                 public void run() {
                     super.run();
-                    try {
-                        String data = prefs.getString("data", "Oh crap");
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setMessage("Decrypting");
-                            }
-                        });
-                        AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
-                        String plainText = decryptString(new AesCbcWithIntegrity.CipherTextIvMac(data), key);
+                    String plainText = Util.uDecrypt(MainActivity.this, mPassword);
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setMessage("Crunching data");
-                            }
-                        });
-                        PlainStorage.getInstance().setmEntries(Entry.listify(plainText));
-                        displayData();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.dismiss();
-                            }
-                        });
-                        // TODO: Error handling
-                    } catch (GeneralSecurityException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.setMessage("Crunching data");
+                        }
+                    });
+                    PlainStorage.getInstance().setmEntries(Entry.listify(plainText));
+                    displayData();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.dismiss();
+                        }
+                    });
                 }
 
             }.start();
-        }
-        else {
+        } else {
+            Log.i("FFF", "just Display");
             displayData();
         }
 
     }
 
     private void displayData() {
+        Log.i("FFF", "displayData()");
         new Thread() {
             @Override
             public void run() {
@@ -146,40 +127,13 @@ public class MainActivity extends Activity {
         if (id == R.id.action_save) {
             final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
             final String salt = prefs.getString("salt", "Oh crap");
-            final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Crunching data", true);
+            final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Encrypting", true);
             new Thread() {
 
                 @Override
                 public void run() {
                     super.run();
-                    try {
-                        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                        String serData = Entry.stringify(entries);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setMessage("Encrypting");
-                            }
-                        });
-                        AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(mPassword, salt);
-                        AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(serData, key);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setMessage("Storing");
-                            }
-                        });
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("data", civ.toString());
-                        editor.commit();
-                    } catch (GeneralSecurityException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-
+                    Util.uEncrypt(MainActivity.this, mPassword);
                     runOnUiThread(new Runnable() {
 
                         @Override
