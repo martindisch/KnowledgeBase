@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.security.GeneralSecurityException;
@@ -70,6 +71,7 @@ public class LoginActivity extends Activity {
 
         private EditText mFirst, mSecond;
         private Button mGenerate;
+        private Snackbar mSnackbar;
 
         public FragmentSetPassword() {
         }
@@ -80,6 +82,7 @@ public class LoginActivity extends Activity {
             mFirst = (EditText) rootView.findViewById(R.id.etFirst);
             mSecond = (EditText) rootView.findViewById(R.id.etSecond);
             mGenerate = (Button) rootView.findViewById(R.id.bEnter);
+            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), "Passwords not the same", getActivity());
             return rootView;
         }
 
@@ -127,7 +130,7 @@ public class LoginActivity extends Activity {
                             e.printStackTrace();
                         }
                     } else {
-                        // TODO: Have snackbar pop up
+                        mSnackbar.show();
                     }
                 }
             });
@@ -145,6 +148,7 @@ public class LoginActivity extends Activity {
 
         private EditText mFirst;
         private Button mLogin;
+        private Snackbar mSnackbar;
 
         public FragmentCheckPassword() {
         }
@@ -154,6 +158,7 @@ public class LoginActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_checkpassword, container, false);
             mFirst = (EditText) rootView.findViewById(R.id.etFirst);
             mLogin = (Button) rootView.findViewById(R.id.bEnter);
+            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), "Enter the password", getActivity());
             return rootView;
         }
 
@@ -187,8 +192,8 @@ public class LoginActivity extends Activity {
                                             getActivity().finish();
                                         }
                                         else {
-                                            // TODO: snackbar
-                                            Toast.makeText(getActivity(), "Wrong password", Toast.LENGTH_SHORT).show();
+                                            mSnackbar.setText("Wrong password");
+                                            mSnackbar.show();
                                         }
                                     }
                                 });
@@ -196,7 +201,8 @@ public class LoginActivity extends Activity {
 
                         }.start();
                     } else {
-                        // TODO: snackbar
+                        mSnackbar.setText("Enter the password");
+                        mSnackbar.show();
                     }
                 }
             });

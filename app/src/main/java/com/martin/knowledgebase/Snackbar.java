@@ -37,9 +37,13 @@ public class Snackbar {
         mSnackbar.setVisibility(mSnackbar.VISIBLE);
     }
 
-    public void showSnackbar() {
+    public void show() {
         float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
         moveSnackbar(px);
+    }
+
+    public void setText(String text) {
+        mSnackText.setText(text);
     }
 
     public void hideSnackbar() {

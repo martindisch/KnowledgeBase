@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -44,7 +43,7 @@ public class EditActivity extends Activity {
                 PlainStorage.getInstance().setmEntries(entries);
                 finish();
             } else {
-                mSnackbar.showSnackbar();
+                mSnackbar.show();
             }
             return true;
         }
