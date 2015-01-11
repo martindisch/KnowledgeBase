@@ -26,9 +26,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: savedInstanceState data (Move everything from onResume here)
         setContentView(R.layout.activity_main);
-        Log.i("FFF", "onCreate");
         Intent i = getIntent();
         mPassword = i.getStringExtra("password");
         container = (LinearLayout) findViewById(R.id.container);
@@ -46,11 +44,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("FFF", "onResume");
         PlainStorage store = PlainStorage.getInstance();
         final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
         if (store.isNew() && prefs.contains("data")) {
-            Log.i("FFF", "isNew");
             final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Decrypting", true);
             new Thread() {
 
@@ -78,14 +74,12 @@ public class MainActivity extends Activity {
 
             }.start();
         } else {
-            Log.i("FFF", "just Display");
             displayData();
         }
 
     }
 
     private void displayData() {
-        Log.i("FFF", "displayData()");
         new Thread() {
             @Override
             public void run() {

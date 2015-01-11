@@ -25,7 +25,6 @@ public class Util {
             AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
             plainText = decryptString(new AesCbcWithIntegrity.CipherTextIvMac(prefs.getString("data", "Oh crap")), key);
         } catch (GeneralSecurityException e) {
-            // TODO: error handling
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -44,7 +43,6 @@ public class Util {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("data", civ.toString());
             editor.commit();
-            // TODO: error handling
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -59,7 +57,6 @@ public class Util {
             AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
             plainText = decryptString(new AesCbcWithIntegrity.CipherTextIvMac(prefs.getString(name, "Oh crap")), key);
         } catch (GeneralSecurityException e) {
-            // TODO: error handling
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -78,7 +75,6 @@ public class Util {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(name, civ.toString());
             editor.commit();
-            // TODO: error handling
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
