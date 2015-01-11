@@ -13,5 +13,6 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="done">Done</string>
+    <string name="snackbar_confirm">Got it</string>
 
 </resources>

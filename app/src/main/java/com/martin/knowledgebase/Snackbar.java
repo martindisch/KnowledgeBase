@@ -13,14 +13,17 @@ import android.widget.TextView;
 public class Snackbar {
 
     private RelativeLayout mSnackbar;
-    private TextView mSnackButton;
+    private TextView mSnackButton, mSnackText;
     private Context mContext;
 
-    public Snackbar(RelativeLayout mSnackbar, TextView mSnackButton, Context mContext) {
-        this.mSnackbar = mSnackbar;
-        this.mSnackButton = mSnackButton;
+    public Snackbar(RelativeLayout snackbar, String text, Context context) {
+        mSnackbar = snackbar;
+        mSnackButton = (TextView) mSnackbar.findViewById(R.id.snackbar_button);
+        mSnackText = (TextView) mSnackbar.findViewById(R.id.snackbar_text);
+
+        mSnackText.setText(text);
         // I know, we're just waiting to leak a context here...
-        this.mContext = mContext;
+        mContext = context;
 
         mSnackButton.setOnClickListener(new View.OnClickListener() {
             @Override

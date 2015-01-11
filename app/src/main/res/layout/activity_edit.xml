@@ -2,41 +2,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.martin.knowledgebase.EditActivity">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title" />
-
-    <EditText
-        android:id="@+id/etTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitle"
-        android:imeOptions="actionNext"
-        android:inputType="textCapSentences" />
-
-    <TextView
-        android:id="@+id/tvText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etTitle"
-        android:text="@string/text" />
-
-    <EditText
-        android:id="@+id/etText"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tvText"
-        android:gravity="top"
-        android:inputType="textCapSentences|textMultiLine"
-        android:scrollbars="vertical" />
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title" />
+
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitle"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etTitle"
+            android:text="@string/text" />
+
+        <EditText
+            android:id="@+id/etText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tvText"
+            android:gravity="top"
+            android:inputType="textCapSentences|textMultiLine"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/snackbar"
@@ -54,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Long press to remove an item"
+            android:id="@+id/snackbar_text"
             android:textColor="?android:textColorPrimaryInverse"
             android:textSize="14sp" />
 
@@ -63,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Got it"
             android:textAllCaps="true"
+            android:text="@string/snackbar_confirm"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="?android:colorPrimaryDark"
             android:textSize="14sp" />
