@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.tozny.crypto.android.AesCbcWithIntegrity;
+
 import java.security.GeneralSecurityException;
 
 import static com.tozny.crypto.android.AesCbcWithIntegrity.generateSalt;
