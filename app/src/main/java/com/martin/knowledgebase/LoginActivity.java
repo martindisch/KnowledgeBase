@@ -14,11 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import static com.tozny.crypto.android.AesCbcWithIntegrity.generateSalt;
 import static com.tozny.crypto.android.AesCbcWithIntegrity.saltString;
@@ -101,20 +100,21 @@ public class LoginActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     if (mFirst.getText().toString().contentEquals(mSecond.getText().toString()) && !mFirst.getText().toString().contentEquals("")) {
-                        try {
-                            String salt = saltString(generateSalt());
-                            SharedPreferences prefs = getActivity().getSharedPreferences("KB", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("salt", salt);
-                            editor.commit();
-                            // TODO: More efficient way of checking password, e.g. hashing function
-                            final ProgressDialog progress = ProgressDialog.show(getActivity(), "Saving", "Saving password", true);
-                            new Thread() {
+                        final ProgressDialog progress = ProgressDialog.show(getActivity(), "Saving", "Saving password", true);
 
-                                @Override
-                                public void run() {
-                                    super.run();
-                                    Util.stringEncrypt(getActivity(), mFirst.getText().toString(), "pwcheck", "This should equal itself.");
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+
+                                try {
+                                    String salt = saltString(generateSalt());
+                                    SharedPreferences prefs = getActivity().getSharedPreferences("KB", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putString("salt", salt);
+                                    editor.putString("pwhash", PasswordHash.createHash(mFirst.getText().toString()));
+                                    editor.commit();
+
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -125,12 +125,11 @@ public class LoginActivity extends Activity {
                                             getActivity().finish();
                                         }
                                     });
+                                } catch (GeneralSecurityException e) {
+                                    e.printStackTrace();
                                 }
-
-                            }.start();
-                        } catch (GeneralSecurityException e) {
-                            e.printStackTrace();
-                        }
+                            }
+                        }.start();
                     } else {
                         mSnackbar.show();
                     }
@@ -182,23 +181,36 @@ public class LoginActivity extends Activity {
                             @Override
                             public void run() {
                                 super.run();
-                                final String decrypted = Util.stringDecrypt(getActivity(), mFirst.getText().toString(), "pwcheck");
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        progress.dismiss();
-                                        if (decrypted.contentEquals("This should equal itself.")) {
-                                            Intent i = new Intent(getActivity(), MainActivity.class);
-                                            i.putExtra("password", mFirst.getText().toString());
-                                            startActivity(i);
-                                            getActivity().finish();
-                                        }
-                                        else {
-                                            mSnackbar.setText("Wrong password");
-                                            mSnackbar.show();
-                                        }
+                                SharedPreferences prefs = getActivity().getSharedPreferences("KB", MODE_PRIVATE);
+                                try {
+
+                                    if (PasswordHash.validatePassword(mFirst.getText().toString(), prefs.getString("pwhash", "Oh crap"))) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progress.dismiss();
+                                                Intent i = new Intent(getActivity(), MainActivity.class);
+                                                i.putExtra("password", mFirst.getText().toString());
+                                                startActivity(i);
+                                                getActivity().finish();
+                                            }
+                                        });
+                                    } else {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progress.dismiss();
+                                                mSnackbar.setText("Wrong password");
+                                                mSnackbar.show();
+                                            }
+                                        });
                                     }
-                                });
+
+                                } catch (NoSuchAlgorithmException e) {
+                                    e.printStackTrace();
+                                } catch (InvalidKeySpecException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }.start();
