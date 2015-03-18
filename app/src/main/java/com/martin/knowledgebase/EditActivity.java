@@ -1,7 +1,9 @@
 package com.martin.knowledgebase;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ public class EditActivity extends Activity {
 
     private EditText mTitle, mText;
     private Snackbar mSnackbar;
+    private int index = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +25,14 @@ public class EditActivity extends Activity {
         mTitle = (EditText) findViewById(R.id.etTitle);
         mText = (EditText) findViewById(R.id.etText);
         mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), "Title and/or text missing", this);
-    }
 
+        Intent i = getIntent();
+        if (i.hasExtra("index")) {
+            index = i.getIntExtra("index", -1);
+            mTitle.setText(i.getStringExtra("title"));
+            mText.setText(i.getStringExtra("text"));
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,7 +48,12 @@ public class EditActivity extends Activity {
         if (id == R.id.action_done) {
             if (!mTitle.getText().toString().contentEquals("") && !mText.getText().toString().contentEquals("")) {
                 ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
+                if (index != -1) {
+                    entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
+                }
+                else {
+                    entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
+                }
                 PlainStorage.getInstance().setmEntries(entries);
                 finish();
             } else {

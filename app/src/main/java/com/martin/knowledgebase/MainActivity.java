@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
     private String mPassword;
     private ImageButton mFab;
-    private RecyclerView mRecyclerView;
+    public RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
