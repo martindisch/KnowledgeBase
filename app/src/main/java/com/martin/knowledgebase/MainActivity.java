@@ -5,10 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,9 +22,10 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     private String mPassword;
-    private LinearLayout container;
-    private TextView mEntries;
     private ImageButton mFab;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
         mPassword = i.getStringExtra("password");
-        container = (LinearLayout) findViewById(R.id.container);
-        mEntries = (TextView) findViewById(R.id.tvEntries);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.container);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         mFab = (ImageButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,10 +71,10 @@ public class MainActivity extends Activity {
                         }
                     });
                     PlainStorage.getInstance().setmEntries(Util.listify(plainText));
-                    displayData();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            displayData();
                             progress.dismiss();
                         }
                     });
@@ -80,26 +88,9 @@ public class MainActivity extends Activity {
     }
 
     private void displayData() {
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-                String all = "";
-                for (Entry e : entries) {
-                    all += e.getTitle() + " - " + e.getDate() + "\n";
-                    all += e.getText() + "\n\n";
-                }
-                final String text = all;
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        mEntries.setText(text);
-                    }
-                });
-            }
-        }.run();
+        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+        mAdapter = new EntryAdapter(entries);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
