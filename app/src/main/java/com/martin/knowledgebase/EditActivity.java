@@ -29,8 +29,9 @@ public class EditActivity extends Activity {
         Intent i = getIntent();
         if (i.hasExtra("index")) {
             index = i.getIntExtra("index", -1);
-            mTitle.setText(i.getStringExtra("title"));
-            mText.setText(i.getStringExtra("text"));
+            Entry entry = PlainStorage.getInstance().getmEntries().get(index);
+            mTitle.setText(entry.getTitle());
+            mText.setText(entry.getText());
         }
     }
 
