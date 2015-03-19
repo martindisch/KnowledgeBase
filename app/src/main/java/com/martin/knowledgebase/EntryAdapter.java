@@ -38,13 +38,9 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(v.getContext(), EditActivity.class);
+        Intent i = new Intent(v.getContext(), ViewActivity.class);
         int index = ((MainActivity) v.getContext()).mRecyclerView.getChildPosition(v);
-        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-        Entry entry = entries.get(index);
         i.putExtra("index", index);
-        i.putExtra("title", entry.getTitle());
-        i.putExtra("text", entry.getText());
         v.getContext().startActivity(i);
     }
 
