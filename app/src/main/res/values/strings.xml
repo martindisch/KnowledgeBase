@@ -16,5 +16,6 @@
     <string name="snackbar_confirm">Got it</string>
     <string name="title_activity_view">ViewActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="edit">Edit</string>
 
 </resources>
