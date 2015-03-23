@@ -1,6 +1,5 @@
 package com.martin.knowledgebase;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Path;

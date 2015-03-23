@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 
 public class ViewActivity extends Activity {
 
