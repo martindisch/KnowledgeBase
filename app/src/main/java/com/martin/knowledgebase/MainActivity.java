@@ -105,7 +105,6 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
             final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Encrypting", true);
             new Thread() {
 

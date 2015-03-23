@@ -67,8 +67,6 @@ public class Util {
     public static void stringEncrypt(Context context, String password, String name, String content) {
         SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
 
-        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-
         try {
             AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
             AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(content, key);
