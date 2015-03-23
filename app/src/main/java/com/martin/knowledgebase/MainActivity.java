@@ -7,23 +7,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
 
+    public RecyclerView mRecyclerView;
     private String mPassword;
     private ImageButton mFab;
-    public RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -110,7 +106,6 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
-            final String salt = prefs.getString("salt", "Oh crap");
             final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Encrypting", true);
             new Thread() {
 
@@ -135,4 +130,19 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == 0) {
+            Intent i = new Intent(this, EditActivity.class);
+            int index = item.getGroupId(); // Retrieve the position
+            i.putExtra("index", index);
+            startActivity(i);
+        } else {
+            ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+            entries.remove(item.getGroupId());
+            PlainStorage.getInstance().setmEntries(entries);
+            mAdapter.notifyItemRemoved(item.getGroupId());
+        }
+        return super.onContextItemSelected(item);
+    }
 }

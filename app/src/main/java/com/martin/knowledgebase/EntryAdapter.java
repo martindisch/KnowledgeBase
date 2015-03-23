@@ -2,6 +2,7 @@ package com.martin.knowledgebase;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> implements View.OnClickListener {
+public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> implements View.OnClickListener, View.OnCreateContextMenuListener {
 
     private ArrayList<Entry> mEntries;
 
@@ -21,6 +22,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     public EntryAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_entry, parent, false);
         v.setOnClickListener(this);
+        v.setOnCreateContextMenuListener(this);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -39,9 +41,19 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     @Override
     public void onClick(View v) {
         Intent i = new Intent(v.getContext(), ViewActivity.class);
-        int index = ((MainActivity) v.getContext()).mRecyclerView.getChildPosition(v);
-        i.putExtra("index", index);
+        i.putExtra("index", getPosition(v));
         v.getContext().startActivity(i);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        // Quite the hacky approach, I'm adding the position of each item as the groupId
+        menu.add(getPosition(v), 0, 0, "Edit");
+        menu.add(getPosition(v), 1, 1, "Delete");
+    }
+
+    private int getPosition(View v) {
+        return ((MainActivity) v.getContext()).mRecyclerView.getChildPosition(v);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
