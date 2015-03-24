@@ -44,11 +44,11 @@ public class SearchActivity extends Activity {
         if (Intent.ACTION_SEARCH.equals(i.getAction())) {
             String query = i.getStringExtra(SearchManager.QUERY);
             ArrayList<Entry> results = Util.searchList(PlainStorage.getInstance().getmEntries(), query);
+            displayData(results);
         }
     }
 
-    private void displayData() {
-        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+    private void displayData(ArrayList<Entry> entries) {
         mAdapter = new EntryAdapter(entries);
         mRecyclerView.setAdapter(mAdapter);
     }
