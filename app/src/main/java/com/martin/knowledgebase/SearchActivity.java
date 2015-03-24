@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class SearchActivity extends Activity implements RecyclerViewOwner {
 
     private RecyclerView mRecyclerView;
-    private String mPassword;
     private ImageButton mFab;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;

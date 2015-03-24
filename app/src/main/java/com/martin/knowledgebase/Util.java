@@ -115,7 +115,7 @@ public class Util {
         Entry entry;
         for (int i = 0; i < list.size(); i++) {
             entry = list.get(i);
-            if (entry.getTitle().contains(query) || entry.getText().contains(query)) {
+            if (entry.getTitle().toLowerCase().contains(query.toLowerCase()) || entry.getText().toLowerCase().contains(query.toLowerCase())) {
                 results.add(entry);
             }
         }
