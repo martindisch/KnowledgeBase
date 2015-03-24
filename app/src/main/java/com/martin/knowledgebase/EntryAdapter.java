@@ -53,7 +53,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     }
 
     private int getPosition(View v) {
-        return ((MainActivity) v.getContext()).mRecyclerView.getChildPosition(v);
+        return ((RecyclerViewOwner) v.getContext()).getRecyclerView().getChildPosition(v);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

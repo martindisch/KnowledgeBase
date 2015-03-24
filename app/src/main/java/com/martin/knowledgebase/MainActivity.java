@@ -19,9 +19,9 @@ import android.widget.SearchView;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements RecyclerViewOwner {
 
-    public RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private String mPassword;
     private ImageButton mFab;
     private RecyclerView.Adapter mAdapter;
@@ -152,5 +152,10 @@ public class MainActivity extends Activity {
             mAdapter.notifyItemRemoved(item.getGroupId());
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 }
