@@ -16,5 +16,8 @@
     <string name="snackbar_confirm">Got it</string>
     <string name="title_activity_view">View entry</string>
     <string name="edit">Edit</string>
+    <string name="search_hint">Search entries</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
