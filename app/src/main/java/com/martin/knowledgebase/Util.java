@@ -110,4 +110,15 @@ public class Util {
         return entries;
     }
 
+    public static ArrayList<Entry> searchList(ArrayList<Entry> list, String query) {
+        ArrayList<Entry> results = new ArrayList<Entry>();
+        Entry entry;
+        for (int i = 0; i < list.size(); i++) {
+            entry = list.get(i);
+            if (entry.getTitle().contains(query) || entry.getText().contains(query)) {
+                results.add(entry);
+            }
+        }
+        return results;
+    }
 }
