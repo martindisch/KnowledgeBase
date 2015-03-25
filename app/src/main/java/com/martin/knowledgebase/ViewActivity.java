@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class ViewActivity extends Activity {
 
     private TextView mTitle, mDate, mText;
-    private int index;
+    private int uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +21,11 @@ public class ViewActivity extends Activity {
         mDate = (TextView) findViewById(R.id.tvDate);
         mText = (TextView) findViewById(R.id.tvText);
 
-        index = getIntent().getIntExtra("index", -1);
+        uid = getIntent().getIntExtra("uid", -1);
     }
 
     private void displayData() {
-        Entry entry = PlainStorage.getInstance().getmEntries().get(index);
+        Entry entry = Util.getWithUid(PlainStorage.getInstance().getmEntries(), uid);
         mTitle.setText(entry.getTitle());
         mDate.setText(entry.getDate());
         mText.setText(entry.getText());
@@ -49,7 +49,7 @@ public class ViewActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_edit) {
             Intent i = new Intent(this, EditActivity.class);
-            i.putExtra("index", index);
+            i.putExtra("uid", uid);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);

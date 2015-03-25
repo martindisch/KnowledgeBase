@@ -38,6 +38,7 @@ public class Util {
         ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
 
         try {
+            // TODO: Ensure password is kept in memory, even after many activiy changes
             AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
             AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
             SharedPreferences.Editor editor = prefs.edit();
@@ -128,8 +129,17 @@ public class Util {
         SharedPreferences prefs = context.getSharedPreferences("KB", context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         int uid = prefs.getInt("next_uid", 0);
-        editor.putInt("next_uid", uid++);
+        editor.putInt("next_uid", uid + 1);
         editor.commit();
         return uid;
+    }
+
+    public static Entry getWithUid(ArrayList<Entry> entries, int uid) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).getUid() == uid) {
+                return entries.get(i);
+            }
+        }
+        return new Entry("No entry with this uid", "Ditto", "2000-01-01", -1);
     }
 }

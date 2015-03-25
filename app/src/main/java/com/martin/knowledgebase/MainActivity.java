@@ -142,14 +142,15 @@ public class MainActivity extends Activity implements RecyclerViewOwner {
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == 0) {
             Intent i = new Intent(this, EditActivity.class);
-            int index = item.getGroupId(); // Retrieve the position
-            i.putExtra("index", index);
+            int uid = item.getGroupId(); // Retrieve the uid
+            i.putExtra("uid", uid);
             startActivity(i);
         } else {
             ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-            entries.remove(item.getGroupId());
+            int index = entries.indexOf(Util.getWithUid(entries, item.getGroupId()));
+            entries.remove(index);
             PlainStorage.getInstance().setmEntries(entries);
-            mAdapter.notifyItemRemoved(item.getGroupId());
+            mAdapter.notifyItemRemoved(index);
         }
         return super.onContextItemSelected(item);
     }

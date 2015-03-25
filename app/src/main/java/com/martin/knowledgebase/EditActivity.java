@@ -15,6 +15,7 @@ public class EditActivity extends Activity {
 
     private EditText mTitle, mText;
     private Snackbar mSnackbar;
+    private int uid = -1;
     private int index = -1;
 
     @Override
@@ -26,9 +27,10 @@ public class EditActivity extends Activity {
         mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), "Title and/or text missing", this);
 
         Intent i = getIntent();
-        if (i.hasExtra("index")) {
-            index = i.getIntExtra("index", -1);
-            Entry entry = PlainStorage.getInstance().getmEntries().get(index);
+        if (i.hasExtra("uid")) {
+            uid = i.getIntExtra("uid", -1);
+            Entry entry = Util.getWithUid(PlainStorage.getInstance().getmEntries(), uid);
+            index = PlainStorage.getInstance().getmEntries().indexOf(entry);
             mTitle.setText(entry.getTitle());
             mText.setText(entry.getText());
         }
@@ -49,7 +51,7 @@ public class EditActivity extends Activity {
             if (!mTitle.getText().toString().contentEquals("") && !mText.getText().toString().contentEquals("")) {
                 ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
                 if (index != -1) {
-                    entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), entries.get(index).getUid()));
+                    entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), uid));
                 }
                 else {
                     entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), Util.getUid(this)));

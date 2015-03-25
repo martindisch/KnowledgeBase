@@ -2,6 +2,7 @@ package com.martin.knowledgebase;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.left.setText(mEntries.get(position).getTitle());
         holder.right.setText(mEntries.get(position).getDate());
+        // Setting the unique identifier as tag on the left textView
+        holder.left.setTag(mEntries.get(position).getUid());
     }
 
     @Override
@@ -41,19 +44,16 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     @Override
     public void onClick(View v) {
         Intent i = new Intent(v.getContext(), ViewActivity.class);
-        i.putExtra("index", getPosition(v));
+        // Getting uid from tag
+        i.putExtra("uid", (int) v.findViewById(R.id.tvLeft).getTag());
         v.getContext().startActivity(i);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        // Quite the hacky approach, I'm adding the position of each item as the groupId
-        menu.add(getPosition(v), 0, 0, "Edit");
-        menu.add(getPosition(v), 1, 1, "Delete");
-    }
-
-    private int getPosition(View v) {
-        return ((RecyclerViewOwner) v.getContext()).getRecyclerView().getChildPosition(v);
+        // Quite the hacky approach, I'm adding the uid of each item as the groupId
+        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 0, 0, "Edit");
+        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 1, 1, "Delete");
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

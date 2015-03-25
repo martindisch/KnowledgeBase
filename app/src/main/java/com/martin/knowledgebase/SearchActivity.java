@@ -19,6 +19,7 @@ public class SearchActivity extends Activity implements RecyclerViewOwner {
     private ImageButton mFab;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Entry> results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class SearchActivity extends Activity implements RecyclerViewOwner {
         Intent i = getIntent();
         if (Intent.ACTION_SEARCH.equals(i.getAction())) {
             String query = i.getStringExtra(SearchManager.QUERY);
-            ArrayList<Entry> results = Util.searchList(PlainStorage.getInstance().getmEntries(), query);
+            results = Util.searchList(PlainStorage.getInstance().getmEntries(), query);
             displayData(results);
         }
     }
@@ -56,14 +57,18 @@ public class SearchActivity extends Activity implements RecyclerViewOwner {
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == 0) {
             Intent i = new Intent(this, EditActivity.class);
-            int index = item.getGroupId(); // Retrieve the position
-            i.putExtra("index", index);
+            int uid = item.getGroupId(); // Retrieve the uid
+            i.putExtra("uid", uid);
             startActivity(i);
         } else {
-            ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
-            entries.remove(item.getGroupId());
-            PlainStorage.getInstance().setmEntries(entries);
-            mAdapter.notifyItemRemoved(item.getGroupId());
+            ArrayList<Entry> realEntries = PlainStorage.getInstance().getmEntries();
+            int realIndex = realEntries.indexOf(Util.getWithUid(realEntries, item.getGroupId()));
+            realEntries.remove(realIndex);
+            PlainStorage.getInstance().setmEntries(realEntries);
+
+            int index = results.indexOf(Util.getWithUid(results, item.getGroupId()));
+            results.remove(index);
+            mAdapter.notifyItemRemoved(index);
         }
         return super.onContextItemSelected(item);
     }
