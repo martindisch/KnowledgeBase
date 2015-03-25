@@ -19,7 +19,7 @@ import android.widget.SearchView;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity implements RecyclerViewOwner {
+public class MainActivity extends Activity {
 
     private RecyclerView mRecyclerView;
     private String mPassword;
@@ -153,10 +153,5 @@ public class MainActivity extends Activity implements RecyclerViewOwner {
             mAdapter.notifyItemRemoved(index);
         }
         return super.onContextItemSelected(item);
-    }
-
-    @Override
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
     }
 }

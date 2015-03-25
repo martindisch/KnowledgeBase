@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 
 
-public class SearchActivity extends Activity implements RecyclerViewOwner {
+public class SearchActivity extends Activity {
 
     private RecyclerView mRecyclerView;
     private ImageButton mFab;
@@ -47,7 +47,7 @@ public class SearchActivity extends Activity implements RecyclerViewOwner {
             displayData(results);
         }
     }
-
+    // TODO: Refresh list after edit
     private void displayData(ArrayList<Entry> entries) {
         mAdapter = new EntryAdapter(entries);
         mRecyclerView.setAdapter(mAdapter);
@@ -71,10 +71,5 @@ public class SearchActivity extends Activity implements RecyclerViewOwner {
             mAdapter.notifyItemRemoved(index);
         }
         return super.onContextItemSelected(item);
-    }
-
-    @Override
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
     }
 }
