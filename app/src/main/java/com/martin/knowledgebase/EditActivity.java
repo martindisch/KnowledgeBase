@@ -49,10 +49,10 @@ public class EditActivity extends Activity {
             if (!mTitle.getText().toString().contentEquals("") && !mText.getText().toString().contentEquals("")) {
                 ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
                 if (index != -1) {
-                    entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
+                    entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), entries.get(index).getUid()));
                 }
                 else {
-                    entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate()));
+                    entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), Util.getUid(this)));
                 }
                 PlainStorage.getInstance().setmEntries(entries);
                 finish();

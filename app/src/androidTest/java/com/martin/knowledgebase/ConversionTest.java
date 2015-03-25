@@ -12,22 +12,22 @@ public class ConversionTest extends AndroidTestCase {
     public void setUp() throws Exception {
         super.setUp();
         entries = new ArrayList<Entry>();
-        entries.add(new Entry("Title", "Text here", "2015-01-04"));
-        entries.add(new Entry("Title2", "Text here2", "2015-01-05"));
-        entries.add(new Entry("Title3", "Text here3", "2015-01-06"));
+        entries.add(new Entry("Title", "Text here", "2015-01-04", 0));
+        entries.add(new Entry("Title2", "Text here2", "2015-01-05", 1));
+        entries.add(new Entry("Title3", "Text here3", "2015-01-06", 2));
     }
 
     public void testStringify() throws Exception {
         String string = Util.stringify(entries);
-        assertEquals("Not the same:", "Title-INNER-Text here-INNER-2015-01-04-OUTER-Title2-INNER-Text here2-INNER-2015-01-05-OUTER-Title3-INNER-Text here3-INNER-2015-01-06", string);
+        assertEquals("Not the same:", "Title-INNER-Text here-INNER-2015-01-04-INNER-0-OUTER-Title2-INNER-Text here2-INNER-2015-01-05-INNER-1-OUTER-Title3-INNER-Text here3-INNER-2015-01-06-INNER-2", string);
     }
 
     public void testEquals() throws Exception {
         ArrayList<Entry> entries1 = new ArrayList<Entry>();
-        entries1.add(new Entry("Title", "Text here", "2015-01-04"));
+        entries1.add(new Entry("Title", "Text here", "2015-01-04", 0));
 
         ArrayList<Entry> entries2 = new ArrayList<Entry>();
-        entries2.add(new Entry("Title", "Text here", "2015-01-04"));
+        entries2.add(new Entry("Title", "Text here", "2015-01-04", 1));
 
         assertEquals("Not the same:", entries1, entries2);
 

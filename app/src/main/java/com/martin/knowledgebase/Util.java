@@ -91,11 +91,13 @@ public class Util {
         for (int i = 0; i < (size - 1); i++) {
             data += entries.get(i).getTitle() + "-INNER-";
             data += entries.get(i).getText() + "-INNER-";
-            data += entries.get(i).getDate() + "-OUTER-";
+            data += entries.get(i).getDate() + "-INNER-";
+            data += entries.get(i).getUid() + "-OUTER-";
         }
         data += entries.get(size - 1).getTitle() + "-INNER-";
         data += entries.get(size - 1).getText() + "-INNER-";
-        data += entries.get(size - 1).getDate();
+        data += entries.get(size - 1).getDate() + "-INNER-";
+        data += entries.get(size - 1).getUid();
         return data;
     }
 
@@ -105,7 +107,7 @@ public class Util {
         String[] sEntry;
         for (int i = 0; i < sEntries.length; i++) {
             sEntry = sEntries[i].split("-INNER-");
-            entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2]));
+            entries.add(new Entry(sEntry[0], sEntry[1], sEntry[2], Integer.parseInt(sEntry[3])));
         }
         return entries;
     }
@@ -120,5 +122,14 @@ public class Util {
             }
         }
         return results;
+    }
+
+    public static int getUid(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("KB", context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        int uid = prefs.getInt("next_uid", 0);
+        editor.putInt("next_uid", uid++);
+        editor.commit();
+        return uid;
     }
 }

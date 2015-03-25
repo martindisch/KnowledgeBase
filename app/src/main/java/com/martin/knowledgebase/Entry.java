@@ -4,11 +4,21 @@ public class Entry {
     private String title;
     private String text;
     private String date;
+    private int uid;
 
-    public Entry(String title, String text, String date) {
+    public Entry(String title, String text, String date, int uid) {
         this.title = title;
         this.text = text;
         this.date = date;
+        this.uid = uid;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public String getDate() {
