@@ -20,6 +20,7 @@ public class SearchActivity extends Activity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Entry> results;
+    private String query = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +43,20 @@ public class SearchActivity extends Activity {
 
         Intent i = getIntent();
         if (Intent.ACTION_SEARCH.equals(i.getAction())) {
-            String query = i.getStringExtra(SearchManager.QUERY);
-            results = Util.searchList(PlainStorage.getInstance().getmEntries(), query);
-            displayData(results);
+            query = i.getStringExtra(SearchManager.QUERY);
         }
     }
-    // TODO: Refresh list after edit
-    private void displayData(ArrayList<Entry> entries) {
-        mAdapter = new EntryAdapter(entries);
+
+    private void displayData() {
+        results = Util.searchList(PlainStorage.getInstance().getmEntries(), query);
+        mAdapter = new EntryAdapter(results);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayData();
     }
 
     @Override
