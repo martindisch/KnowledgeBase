@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,7 +135,6 @@ public class MainActivity extends Activity {
 
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
