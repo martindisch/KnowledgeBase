@@ -25,6 +25,8 @@ public class ViewActivity extends Activity {
     }
 
     private void displayData() {
+        // TODO: Check if uid valid and/or singleton still in memory
+        // Maybe log uid in some way and test long running instance on low memory device
         Entry entry = Util.getWithUid(PlainStorage.getInstance().getmEntries(), uid);
         mTitle.setText(entry.getTitle());
         mDate.setText(entry.getDate());
