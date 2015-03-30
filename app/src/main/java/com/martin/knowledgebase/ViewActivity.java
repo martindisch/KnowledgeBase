@@ -26,11 +26,16 @@ public class ViewActivity extends Activity {
 
     private void displayData() {
         // TODO: Check if uid valid and/or singleton still in memory
-        // Maybe log uid in some way and test long running instance on low memory device
         Entry entry = Util.getWithUid(PlainStorage.getInstance().getmEntries(), uid);
         mTitle.setText(entry.getTitle());
-        mDate.setText(entry.getDate());
+        //mDate.setText(entry.getDate());
         mText.setText(entry.getText());
+
+        // Log uid in case of memory loss - if uid is valid, the problem is the new instance missing any items,
+        // because they're only loaded in MainActivity (Critical design flaw here, PlainStorage.getInstance()
+        // should be loading entries.
+        // If uid is invalid (lower than zero or null), it's simply the uid having slipped out of memory.
+        mDate.setText(uid + "");
     }
 
     @Override
