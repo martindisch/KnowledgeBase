@@ -1,12 +1,17 @@
 package com.martin.knowledgebase;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.widget.EditText;
 
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,17 +38,51 @@ public class Util {
     }
 
     public static void uEncrypt(Context context, String password) {
-        SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
+        final SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
 
-        ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
+        final ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
 
         try {
-            // TODO: Ensure password is kept in memory, even after many activiy changes
-            AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
-            AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("data", civ.toString());
-            editor.commit();
+            // TODO: Test this method to ensure password is kept in memory, even after many activiy changes
+            if (password == null) {
+                AlertDialog.Builder dg = new AlertDialog.Builder(context);
+                final EditText et = new EditText(context);
+                dg.setView(et);
+                dg.setMessage("Reenter your password");
+                dg.setNegativeButton("Cancel", null);
+                dg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            if (PasswordHash.validatePassword(et.getText().toString(), prefs.getString("pwhash", "Oh crap"))) {
+                                try {
+                                    AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(et.getText().toString(), prefs.getString("salt", "Oh crap"));
+                                    AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putString("data", civ.toString());
+                                    editor.commit();
+                                } catch (GeneralSecurityException e) {
+                                    e.printStackTrace();
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeySpecException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                dg.show();
+            }
+            else {
+                AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
+                AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("data", civ.toString());
+                editor.commit();
+            }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
