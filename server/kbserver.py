@@ -8,10 +8,11 @@ class MyTCPServer(SocketServer.ThreadingTCPServer):
 class MyTCPServerHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         try:
+            # data is sent in utf-8 and decoded to unicode
             data = json.loads(self.request.recv(1024).strip().decode('utf-8'))
-            # switch between commands
             if data['command'] == "ping":
                 print "Received ping"
+                # unicode data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'pong'}))
                 print "Sent pong"
             elif data['command'] == "entries":
@@ -20,10 +21,12 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 print "get"
             elif data['command'] == "store":
                 print "Received store"
+                # stores unicode data in utf-8
                 backup = codecs.open(data['date'], 'w', encoding='utf-8')
                 backup.write(data['data'])
                 backup.close()
                 print "File saved"
+                # unicode data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'ok'}))
                 print "Sent ok"
             else:
