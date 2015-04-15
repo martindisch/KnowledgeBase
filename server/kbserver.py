@@ -10,7 +10,9 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             data = json.loads(self.request.recv(1024).strip())
             # switch between commands
             if data['command'] == "ping":
-                print "ping"
+                print "Received ping"
+                self.request.sendall(json.dumps({'response':'pong'}))
+                print "Sent pong"
             elif data['command'] == "entries":
                 print "entries"
             elif data['command'] == "get":
