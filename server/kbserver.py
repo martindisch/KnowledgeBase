@@ -21,8 +21,6 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 print "store"
             else:
                 print "No command received"
-            # send some 'ok' back
-            self.request.sendall(json.dumps({'return':'ok'}))
         except Exception, e:
             print "Exception wile receiving message: ", e
 
