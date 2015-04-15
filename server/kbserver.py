@@ -11,14 +11,20 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             # switch between commands
             if data['command'] == "ping":
                 print "Received ping"
-                self.request.sendall(json.dumps({'response':'pong'}))
+                self.request.sendall(json.dumps({'response': 'pong'}))
                 print "Sent pong"
             elif data['command'] == "entries":
                 print "entries"
             elif data['command'] == "get":
                 print "get"
             elif data['command'] == "store":
-                print "store"
+                print "Received store"
+                backup = open(data['date'], 'w')
+                backup.write(data['data'])
+                backup.close()
+                print "File saved"
+                self.request.sendall(json.dumps({'response': 'ok'}))
+                print "Sent ok"
             else:
                 print "No command received"
         except Exception, e:
