@@ -1,5 +1,6 @@
 import SocketServer
 import json
+import codecs
 
 class MyTCPServer(SocketServer.ThreadingTCPServer):
     allow_reuse_address = True
@@ -7,7 +8,7 @@ class MyTCPServer(SocketServer.ThreadingTCPServer):
 class MyTCPServerHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         try:
-            data = json.loads(self.request.recv(1024).strip())
+            data = json.loads(self.request.recv(1024).strip().decode('utf-8'))
             # switch between commands
             if data['command'] == "ping":
                 print "Received ping"
@@ -19,7 +20,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 print "get"
             elif data['command'] == "store":
                 print "Received store"
-                backup = open(data['date'], 'w')
+                backup = codecs.open(data['date'], 'w', encoding='utf-8')
                 backup.write(data['data'])
                 backup.close()
                 print "File saved"
