@@ -8,8 +8,17 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         try:
             data = json.loads(self.request.recv(1024).strip())
-            # process the data, i.e. print it:
-            print data
+            # switch between commands
+            if data['command'] == "ping":
+                print "ping"
+            elif data['command'] == "entries":
+                print "entries"
+            elif data['command'] == "get":
+                print "get"
+            elif data['command'] == "store":
+                print "store"
+            else:
+                print "No command received"
             # send some 'ok' back
             self.request.sendall(json.dumps({'return':'ok'}))
         except Exception, e:
