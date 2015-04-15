@@ -22,6 +22,9 @@
         android:layout_marginRight="16dp"
         android:background="@drawable/fab_ripple"
         android:elevation="@dimen/button_elevation"
-        android:src="@drawable/ic_add_white_48dp" />
+        android:src="@drawable/ic_add_white_48dp"
+        android:padding="16dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
 
 </RelativeLayout>
