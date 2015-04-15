@@ -35,4 +35,5 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             print "Exception wile receiving message: ", e
 
 server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
+print "Server running"
 server.serve_forever()
