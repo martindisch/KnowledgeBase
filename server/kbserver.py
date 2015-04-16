@@ -31,7 +31,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 backup.write(data['data'])
                 backup.close()
                 print "File saved"
-                # unicode data is converted to utf-8 in dumps()
+                # byte string data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'ok'}))
                 print "Sent ok"
             else:
