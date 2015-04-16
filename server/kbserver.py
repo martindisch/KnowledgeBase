@@ -1,6 +1,7 @@
 import SocketServer
 import json
 import codecs
+import os
 
 class MyTCPServer(SocketServer.ThreadingTCPServer):
     allow_reuse_address = True
@@ -8,21 +9,25 @@ class MyTCPServer(SocketServer.ThreadingTCPServer):
 class MyTCPServerHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         try:
-            # data is sent in utf-8 and decoded to unicode
+            # data is received in utf-8 and decoded to byte strings
             data = json.loads(self.request.recv(1024).strip().decode('utf-8'))
             if data['command'] == "ping":
                 print "Received ping"
-                # unicode data is converted to utf-8 in dumps()
+                # byte string data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'pong'}))
                 print "Sent pong"
             elif data['command'] == "entries":
-                print "entries"
+                print "Received entries"
+                files = [f for f in os.listdir("store") if os.path.isfile(os.path.join("store", f))]
+                # byte string data is converted to utf-8 in dumps()
+                self.request.sendall(json.dumps({'entries': list(reversed(files))}))
+                print "Sent entries"
             elif data['command'] == "get":
                 print "get"
             elif data['command'] == "store":
                 print "Received store"
-                # stores unicode data in utf-8
-                backup = codecs.open(data['date'], 'w', encoding='utf-8')
+                # stores byte string data in utf-8
+                backup = codecs.open("store/" + data['date'], 'w', encoding='utf-8')
                 backup.write(data['data'])
                 backup.close()
                 print "File saved"
@@ -35,5 +40,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             print "Exception wile receiving message: ", e
 
 server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
+if not os.path.exists("store"):
+    os.mkdir("store")
 print "Server running"
 server.serve_forever()
