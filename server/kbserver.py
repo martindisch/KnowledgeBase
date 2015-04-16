@@ -23,7 +23,13 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 self.request.sendall(json.dumps({'entries': list(reversed(files))}))
                 print "Sent entries"
             elif data['command'] == "get":
-                print "get"
+                print "Received get "
+                backup = codecs.open("store/" + data['date'], 'r', encoding='utf-8')
+                content = backup.read()
+                backup.close()
+                print "Read file"
+                self.request.sendall(json.dumps({'data': content}))
+                print "Sent content"
             elif data['command'] == "store":
                 print "Received store"
                 # stores byte string data in utf-8
