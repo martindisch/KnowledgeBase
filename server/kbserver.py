@@ -41,9 +41,15 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 self.request.sendall(json.dumps({'response': 'ok'}))
                 print "Sent ok"
             else:
-                print "No command received"
+                raise Exception("No/unknown command received")
         except Exception, e:
             print "Exception wile receiving message: ", e
+            print "Sending exception"
+            try:
+                self.request.sendall(json.dumps({'error': str(e)}))
+                print "Sent exception"
+            except Exception, e:
+                print "Failed to send exception: ", e
 
 server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
 if not os.path.exists("store"):
