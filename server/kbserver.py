@@ -19,7 +19,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             elif data['command'] == "entries":
                 print "Received entries"
                 files = [f for f in os.listdir("store") if os.path.isfile(os.path.join("store", f))]
-                self.request.sendall(json.dumps({'entries': list(reversed(files))}))
+                self.request.sendall(json.dumps({'response': list(reversed(files))}))
                 print "Sent entries"
             elif data['command'] == "get":
                 print "Received get"
@@ -28,7 +28,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 content = backup.read()
                 backup.close()
                 print "Read file"
-                self.request.sendall(json.dumps({'data': content}))
+                self.request.sendall(json.dumps({'response': content}))
                 print "Sent content"
             elif data['command'] == "store":
                 print "Received store"
