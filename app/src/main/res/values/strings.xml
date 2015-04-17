@@ -19,5 +19,6 @@
     <string name="search_hint">Search entries</string>
     <string name="title_activity_search">Search Results</string>
     <string name="search">Search</string>
+    <string name="title_activity_backup">BackupActivity</string>
 
 </resources>
