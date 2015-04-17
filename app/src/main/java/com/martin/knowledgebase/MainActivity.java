@@ -137,6 +137,10 @@ public class MainActivity extends Activity {
 
             return true;
         }
+        else if (id == R.id.action_backup) {
+            Intent i = new Intent(this, BackupActivity.class);
+            startActivity(i);
+        }
         return super.onOptionsItemSelected(item);
     }
 
