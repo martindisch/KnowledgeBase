@@ -20,5 +20,6 @@
     <string name="title_activity_search">Search Results</string>
     <string name="search">Search</string>
     <string name="title_activity_backup">Backup</string>
+    <string name="server_online">Server online</string>
 
 </resources>
