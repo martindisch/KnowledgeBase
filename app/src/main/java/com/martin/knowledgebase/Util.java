@@ -48,9 +48,9 @@ public class Util {
                 AlertDialog.Builder dg = new AlertDialog.Builder(context);
                 final EditText et = new EditText(context);
                 dg.setView(et);
-                dg.setMessage("Reenter your password");
-                dg.setNegativeButton("Cancel", null);
-                dg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                dg.setMessage(R.string.reenter_password);
+                dg.setNegativeButton(R.string.cancel, null);
+                dg.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {

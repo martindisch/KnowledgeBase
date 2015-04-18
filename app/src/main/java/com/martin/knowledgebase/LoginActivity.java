@@ -55,7 +55,7 @@ public class LoginActivity extends Activity {
             mFirst = (EditText) rootView.findViewById(R.id.etFirst);
             mSecond = (EditText) rootView.findViewById(R.id.etSecond);
             mGenerate = (Button) rootView.findViewById(R.id.bEnter);
-            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), "Passwords not the same", getActivity());
+            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), getString(R.string.passwords_not_same), getActivity());
             return rootView;
         }
 
@@ -72,7 +72,7 @@ public class LoginActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     if (mFirst.getText().toString().contentEquals(mSecond.getText().toString()) && !mFirst.getText().toString().contentEquals("")) {
-                        final ProgressDialog progress = ProgressDialog.show(getActivity(), "Saving", "Saving password", true);
+                        final ProgressDialog progress = ProgressDialog.show(getActivity(), getString(R.string.saving), getString(R.string.saving_password), true);
 
                         new Thread() {
                             @Override
@@ -131,7 +131,7 @@ public class LoginActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_checkpassword, container, false);
             mFirst = (EditText) rootView.findViewById(R.id.etFirst);
             mLogin = (Button) rootView.findViewById(R.id.bEnter);
-            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), "Enter the password", getActivity());
+            mSnackbar = new Snackbar((RelativeLayout) rootView.findViewById(R.id.snackbar), getString(R.string.enter_the_password), getActivity());
             return rootView;
         }
 
@@ -147,7 +147,7 @@ public class LoginActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     if (!mFirst.getText().toString().contentEquals("")) {
-                        final ProgressDialog progress = ProgressDialog.show(getActivity(), "Checking", "Checking password", true);
+                        final ProgressDialog progress = ProgressDialog.show(getActivity(), getString(R.string.checking), getString(R.string.checking_password), true);
                         new Thread() {
 
                             @Override
@@ -172,7 +172,7 @@ public class LoginActivity extends Activity {
                                             @Override
                                             public void run() {
                                                 progress.dismiss();
-                                                mSnackbar.setText("Wrong password");
+                                                mSnackbar.setText(getString(R.string.wrong_password));
                                                 mSnackbar.show();
                                             }
                                         });
@@ -187,7 +187,7 @@ public class LoginActivity extends Activity {
 
                         }.start();
                     } else {
-                        mSnackbar.setText("Enter the password");
+                        mSnackbar.setText(getString(R.string.enter_the_password));
                         mSnackbar.show();
                     }
                 }

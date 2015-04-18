@@ -52,8 +52,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         // Quite the hacky approach, I'm adding the uid of each item as the groupId
-        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 0, 0, "Edit");
-        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 1, 1, "Delete");
+        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 0, 0, R.string.edit);
+        menu.add((int) v.findViewById(R.id.tvLeft).getTag(), 1, 1, R.string.delete);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

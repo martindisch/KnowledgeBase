@@ -9,10 +9,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/server_online"
+        android:text="@string/server_checking"
         android:id="@+id/tvStatus"
-        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-        android:textColor="@color/green"/>
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
     <LinearLayout
         android:orientation="horizontal"
