@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
         PlainStorage store = PlainStorage.getInstance();
         final SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
         if (store.isNew() && prefs.contains("data")) {
-            final ProgressDialog progress = ProgressDialog.show(this, "Reading", "Decrypting", true);
+            final ProgressDialog progress = ProgressDialog.show(this, getString(R.string.reading), getString(R.string.decrypting), true);
             new Thread() {
 
                 @Override
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            progress.setMessage("Crunching data");
+                            progress.setMessage(getString(R.string.crunching));
                         }
                     });
                     PlainStorage.getInstance().setmEntries(Util.listify(plainText));
@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            final ProgressDialog progress = ProgressDialog.show(this, "Writing", "Encrypting", true);
+            final ProgressDialog progress = ProgressDialog.show(this, getString(R.string.writing), getString(R.string.encrypting), true);
             new Thread() {
 
                 @Override
@@ -136,6 +136,10 @@ public class MainActivity extends Activity {
             }.start();
 
             return true;
+        }
+        else if (id == R.id.action_backup) {
+            Intent i = new Intent(this, BackupActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

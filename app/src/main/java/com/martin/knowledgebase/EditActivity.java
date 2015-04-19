@@ -24,7 +24,7 @@ public class EditActivity extends Activity {
         setContentView(R.layout.activity_edit);
         mTitle = (EditText) findViewById(R.id.etTitle);
         mText = (EditText) findViewById(R.id.etText);
-        mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), "Title and/or text missing", this);
+        mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), getString(R.string.title_text_missing), this);
 
         Intent i = getIntent();
         if (i.hasExtra("uid")) {
