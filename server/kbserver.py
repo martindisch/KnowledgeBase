@@ -51,7 +51,8 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             except Exception, e:
                 print "Failed to send exception: ", e
 
-server = MyTCPServer(('127.0.0.1', 13373), MyTCPServerHandler)
+ip = raw_input("Internal IP of server: ")
+server = MyTCPServer((ip, 13373), MyTCPServerHandler)
 if not os.path.exists("store"):
     os.mkdir("store")
 print "Server running"
