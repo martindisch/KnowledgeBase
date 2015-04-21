@@ -14,6 +14,12 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class BackupActivity extends Activity {
 
     private RecyclerView mBackupList;
@@ -80,7 +86,30 @@ public class BackupActivity extends Activity {
     }
 
     private void connect() {
-        mStatus.setText(R.string.server_checking);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket("178.82.6.57", 13373);
+                    DataOutputStream DOS = new DataOutputStream(socket.getOutputStream());
+                    DataInputStream DIS = new DataInputStream(socket.getInputStream());
+                    DOS.writeUTF("Héllöchen");
+                    String msg = DIS.readUTF();
+                    Log.e("FFF", msg);
+                    socket.close();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStatus.setText(R.string.server_checking);
+                    }
+                });
+            }
+        }).start();
     }
 
 }
