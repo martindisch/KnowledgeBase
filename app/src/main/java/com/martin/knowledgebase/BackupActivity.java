@@ -7,8 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ public class BackupActivity extends Activity {
 
     private RecyclerView mBackupList;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Button mBackup, mRestore;
+    private Button mBackup, mRestore, mSetAddress;
     private TextView mStatus;
     private String mServerAddress;
 
@@ -33,6 +32,14 @@ public class BackupActivity extends Activity {
         mStatus = (TextView) findViewById(R.id.tvStatus);
         mBackup = (Button) findViewById(R.id.bBackup);
         mRestore = (Button) findViewById(R.id.bRestore);
+        mSetAddress = (Button) findViewById(R.id.bSetAddress);
+
+        mSetAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestAddress();
+            }
+        });
 
         if (getServerAddress()) {
             connect();
@@ -45,7 +52,11 @@ public class BackupActivity extends Activity {
             mServerAddress = prefs.getString("server_address", "Oh crap");
             return true;
         }
+        requestAddress();
+        return false;
+    }
 
+    private void requestAddress() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         builder.setView(input);
@@ -55,6 +66,7 @@ public class BackupActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mServerAddress = input.getText().toString();
+                SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("server_address", mServerAddress);
                 editor.commit();
@@ -63,7 +75,6 @@ public class BackupActivity extends Activity {
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
-        return false;
     }
 
     private void connect() {

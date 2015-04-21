@@ -44,5 +44,6 @@
     <string name="address_title">Server address</string>
     <string name="address_msg">Enter the server\'s IP address</string>
     <string name="server_noaddress">No server address</string>
+    <string name="set_address">Set address</string>
 
 </resources>
