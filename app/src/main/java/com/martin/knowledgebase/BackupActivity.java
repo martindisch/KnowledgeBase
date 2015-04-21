@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class BackupActivity extends Activity {
@@ -58,15 +60,14 @@ public class BackupActivity extends Activity {
 
     private void requestAddress() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // TODO: Nice custom layout for this dialog
-        final EditText input = new EditText(this);
-        builder.setView(input);
+        final View dialogLayout = getLayoutInflater().inflate(R.layout.dialog_string, null);
+        builder.setView(dialogLayout);
         builder.setTitle(R.string.address_title);
         builder.setMessage(R.string.address_msg);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mServerAddress = input.getText().toString();
+                mServerAddress = ((EditText) dialogLayout.findViewById(R.id.etInput)).getText().toString();
                 SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("server_address", mServerAddress);
