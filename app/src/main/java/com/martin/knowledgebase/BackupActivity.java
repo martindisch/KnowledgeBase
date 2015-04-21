@@ -58,6 +58,7 @@ public class BackupActivity extends Activity {
 
     private void requestAddress() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // TODO: Nice custom layout for this dialog
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setTitle(R.string.address_title);

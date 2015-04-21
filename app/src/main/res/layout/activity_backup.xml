@@ -8,22 +8,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.martin.knowledgebase.BackupActivity">
 
-
-
     <Button
+        android:id="@+id/bSetAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/bSetAddress"
-        android:text="@string/set_address"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:text="@string/set_address" />
 
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/bSetAddress"
         android:text="@string/server_noaddress"
-        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-        android:layout_alignBaseline="@id/bSetAddress"/>
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
     <LinearLayout
         android:id="@+id/llButtons"
