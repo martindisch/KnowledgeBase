@@ -41,5 +41,8 @@
     <string name="reenter_password">Reenter your password</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="address_title">Server address</string>
+    <string name="address_msg">Enter the server\'s IP address</string>
+    <string name="server_noaddress">No server address</string>
 
 </resources>

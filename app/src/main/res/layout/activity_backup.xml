@@ -12,9 +12,8 @@
         android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/server_checking"
-        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-        android:visibility="invisible"/>
+        android:text="@string/server_noaddress"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"/>
 
     <LinearLayout
         android:id="@+id/llButtons"
