@@ -4,7 +4,7 @@ import json
 ip = raw_input("Server IP: ")
 while 1:
     data = input("What do you want to send? ")
-    json_string = json.dumps(data) # unicode data is converted to utf-8 in dumps()
+    json_string = json.dumps(data)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ip, 13373))
     s.send(json_string)

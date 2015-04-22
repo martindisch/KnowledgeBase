@@ -13,7 +13,6 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             data = json.loads(self.request.recv(1024).strip().decode('utf-8'))
             if data['command'] == "ping":
                 print "Received ping"
-                # unicode data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'pong'}))
                 print "Sent pong"
             elif data['command'] == "entries":
@@ -37,7 +36,6 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 backup.write(data['data'])
                 backup.close()
                 print "File saved"
-                # unicode data is converted to utf-8 in dumps()
                 self.request.sendall(json.dumps({'response': 'ok'}))
                 print "Sent ok"
             else:
