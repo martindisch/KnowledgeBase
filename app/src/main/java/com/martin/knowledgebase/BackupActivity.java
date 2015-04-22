@@ -34,9 +34,10 @@ public class BackupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
 
+        mLayoutManager = new LinearLayoutManager(this);
         mBackupList = (RecyclerView) findViewById(R.id.rvBackups);
         mBackupList.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        mBackupList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mBackupList.setLayoutManager(mLayoutManager);
         mStatus = (TextView) findViewById(R.id.tvStatus);
         mBackup = (Button) findViewById(R.id.bBackup);

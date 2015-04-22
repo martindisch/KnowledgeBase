@@ -42,7 +42,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder
 
     @Override
     public void onClick(View v) {
-        
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
