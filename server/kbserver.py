@@ -2,6 +2,7 @@ import SocketServer
 import json
 import codecs
 import os
+import sys
 
 class MyTCPServer(SocketServer.ThreadingTCPServer):
     allow_reuse_address = True
@@ -49,8 +50,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             except Exception, e:
                 print "Failed to send exception: ", e
 
-ip = raw_input("Internal IP of server: ")
-server = MyTCPServer((ip, 13373), MyTCPServerHandler)
+server = MyTCPServer((sys.argv[1], 13373), MyTCPServerHandler)
 if not os.path.exists("store"):
     os.mkdir("store")
 print "Server running"

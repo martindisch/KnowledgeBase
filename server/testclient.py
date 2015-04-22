@@ -1,7 +1,8 @@
 import socket
 import json
+import sys
 
-ip = raw_input("Server IP: ")
+ip = sys.argv[1]
 while 1:
     data = input("What do you want to send? ")
     json_string = json.dumps(data)
