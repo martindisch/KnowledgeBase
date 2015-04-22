@@ -139,6 +139,7 @@ public class MainActivity extends Activity {
         }
         else if (id == R.id.action_backup) {
             Intent i = new Intent(this, BackupActivity.class);
+            i.putExtra("password", mPassword);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);

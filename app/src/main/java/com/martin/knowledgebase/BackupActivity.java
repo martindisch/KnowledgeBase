@@ -2,34 +2,22 @@ package com.martin.knowledgebase;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class BackupActivity extends Activity {
 
@@ -37,7 +25,7 @@ public class BackupActivity extends Activity {
     private RecyclerView.LayoutManager mLayoutManager;
     private Button mBackup, mRestore, mSetAddress;
     private TextView mStatus;
-    private String mServerAddress;
+    private String mServerAddress, mPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +47,19 @@ public class BackupActivity extends Activity {
                 requestAddress();
             }
         });
+        mBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                store();
+            }
+        });
 
         if (getServerAddress()) {
-            connect();
+            ping();
         }
+
+        Intent i = getIntent();
+        mPassword = i.getStringExtra("password");
     }
 
     private boolean getServerAddress() {
@@ -89,14 +86,14 @@ public class BackupActivity extends Activity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("server_address", mServerAddress);
                 editor.commit();
-                connect();
+                ping();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
 
-    private void connect() {
+    private void ping() {
         mStatus.setText(R.string.server_checking);
         mStatus.setTextColor(getResources().getColor(android.R.color.primary_text_light));
 
@@ -110,12 +107,10 @@ public class BackupActivity extends Activity {
                     if (Util.hasError(jResponse)) {
                         Log.e("Error tag", jResponse.getString("error"));
                         setOffline();
-                    }
-                    else {
+                    } else {
                         if (jResponse.getString("response").contentEquals("pong")) {
                             setOnline();
-                        }
-                        else {
+                        } else {
                             setOffline();
                         }
                     }
@@ -125,6 +120,64 @@ public class BackupActivity extends Activity {
                 }
             }
         }).start();
+    }
+
+    private void store() {
+        final ProgressDialog progress = ProgressDialog.show(this, getString(R.string.writing), getString(R.string.encrypting), true);
+        new Thread() {
+
+            @Override
+            public void run() {
+                super.run();
+                Util.uEncrypt(BackupActivity.this, mPassword);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.setTitle(R.string.uploading);
+                        progress.setMessage(getResources().getString(R.string.uploading_long));
+                    }
+                });
+                SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+                String response = Util.sendCommand(mServerAddress, "{\"command\": \"store\", \"date\": \"" + Util.getCurrentDate() + "\", \"data\": \"" + prefs.getString("data", "Oh crap") + "\"}");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                    }
+                });
+                try {
+                    JSONObject jResponse = new JSONObject(Util.unescapeJava(response));
+                    if (Util.hasError(jResponse)) {
+                        Log.e("Error tag", jResponse.getString("error"));
+                    } else {
+                        if (jResponse.getString("response").contentEquals("ok")) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(BackupActivity.this, getResources().getString(R.string.store_success), Toast.LENGTH_SHORT).show();
+                                    entries();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(BackupActivity.this, getResources().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    setOffline();
+                }
+            }
+
+        }.start();
+    }
+
+    private void entries() {
+        // TODO: Load entries from server
     }
 
     private void setOffline() {

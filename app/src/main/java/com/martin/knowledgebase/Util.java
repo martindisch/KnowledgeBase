@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -130,7 +129,7 @@ public class Util {
     }
 
     public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         return sdf.format(new Date());
     }
 
