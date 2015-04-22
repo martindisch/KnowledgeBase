@@ -181,4 +181,24 @@ public class Util {
         }
         return new Entry("No entry with this uid", "Ditto", "2000-01-01", -1);
     }
+
+    public static String unescapeJava(String escaped) {
+        if(escaped.indexOf("\\u")==-1)
+            return escaped;
+
+        String processed="";
+
+        int position=escaped.indexOf("\\u");
+        while(position!=-1) {
+            if(position!=0)
+                processed+=escaped.substring(0,position);
+            String token=escaped.substring(position+2,position+6);
+            escaped=escaped.substring(position+6);
+            processed+=(char)Integer.parseInt(token,16);
+            position=escaped.indexOf("\\u");
+        }
+        processed+=escaped;
+
+        return processed;
+    }
 }

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -97,23 +98,23 @@ public class BackupActivity extends Activity {
             public void run() {
                 try {
                     Socket socket = new Socket("178.82.6.57", 13373);
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    out.write("{\"command\": \"get\", \"date\": \"2\"}");
+                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+                    out.write("{\"command\": \"get\", \"date\": \"4\"}");
                     out.flush();
-                    Log.e("FFF", in.readLine());
+                    final String msg = in.readLine();
                     socket.close();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mStatus.setText(Util.unescapeJava(msg));
+                        }
+                    });
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mStatus.setText(R.string.server_checking);
-                    }
-                });
             }
         }).start();
     }
