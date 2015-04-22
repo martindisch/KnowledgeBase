@@ -8,7 +8,17 @@ import android.widget.EditText;
 
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -75,8 +85,7 @@ public class Util {
                     }
                 });
                 dg.show();
-            }
-            else {
+            } else {
                 AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
                 AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
                 SharedPreferences.Editor editor = prefs.edit();
@@ -182,23 +191,51 @@ public class Util {
         return new Entry("No entry with this uid", "Ditto", "2000-01-01", -1);
     }
 
+    public static String sendCommand(final String serverAddress, final String command) {
+        String response;
+        try {
+            Socket socket = new Socket(serverAddress, 13373);
+            socket.setSoTimeout(5000);
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+            out.write(command);
+            out.flush();
+            response = in.readLine();
+            socket.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            response = "{\"error\": " + e.getMessage() + "}";
+        } catch (IOException e) {
+            e.printStackTrace();
+            response = "{\"error\": " + e.getMessage() + "}";
+        }
+        return response;
+    }
+
     public static String unescapeJava(String escaped) {
-        if(escaped.indexOf("\\u")==-1)
+        if (escaped.indexOf("\\u") == -1)
             return escaped;
 
-        String processed="";
+        String processed = "";
 
-        int position=escaped.indexOf("\\u");
-        while(position!=-1) {
-            if(position!=0)
-                processed+=escaped.substring(0,position);
-            String token=escaped.substring(position+2,position+6);
-            escaped=escaped.substring(position+6);
-            processed+=(char)Integer.parseInt(token,16);
-            position=escaped.indexOf("\\u");
+        int position = escaped.indexOf("\\u");
+        while (position != -1) {
+            if (position != 0)
+                processed += escaped.substring(0, position);
+            String token = escaped.substring(position + 2, position + 6);
+            escaped = escaped.substring(position + 6);
+            processed += (char) Integer.parseInt(token, 16);
+            position = escaped.indexOf("\\u");
         }
-        processed+=escaped;
+        processed += escaped;
 
         return processed;
+    }
+
+    public static boolean hasError(JSONObject response) {
+        if (response.has("error")) {
+            return true;
+        }
+        return false;
     }
 }

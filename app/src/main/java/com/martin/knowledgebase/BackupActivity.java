@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,37 +99,26 @@ public class BackupActivity extends Activity {
     private void connect() {
         mStatus.setText(R.string.server_checking);
         mStatus.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                String response = Util.sendCommand(mServerAddress, "{\"command\": \"ping\"}");
                 try {
-                    Socket socket = new Socket(mServerAddress, 13373);
-                    socket.setSoTimeout(5000);
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    out.write("{\"command\": \"ping\"}");
-                    out.flush();
-                    final String msg = in.readLine();
-                    socket.close();
-                    JSONObject response = new JSONObject(Util.unescapeJava(msg));
-                    if (response.getString("response").contentEquals("pong")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStatus.setText(R.string.server_online);
-                                mStatus.setTextColor(getResources().getColor(R.color.green));
-                            }
-                        });
-                    }
-                    else {
+                    JSONObject jResponse = new JSONObject(Util.unescapeJava(response));
+                    if (Util.hasError(jResponse)) {
+                        Log.e("Error tag", jResponse.getString("error"));
                         setOffline();
                     }
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                    setOffline();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    setOffline();
+                    else {
+                        if (jResponse.getString("response").contentEquals("pong")) {
+                            setOnline();
+                        }
+                        else {
+                            setOffline();
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     setOffline();
@@ -143,6 +133,16 @@ public class BackupActivity extends Activity {
             public void run() {
                 mStatus.setText(R.string.server_offline);
                 mStatus.setTextColor(getResources().getColor(R.color.red));
+            }
+        });
+    }
+
+    private void setOnline() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mStatus.setText(R.string.server_online);
+                mStatus.setTextColor(getResources().getColor(R.color.green));
             }
         });
     }
