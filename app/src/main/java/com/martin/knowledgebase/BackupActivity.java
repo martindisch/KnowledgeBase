@@ -20,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BackupActivity extends Activity {
+public class BackupActivity extends Activity implements SimpleAdapter.OnClickListener {
 
     private RecyclerView mBackupList;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -28,6 +28,7 @@ public class BackupActivity extends Activity {
     private Button mBackup, mRestore, mSetAddress;
     private TextView mStatus;
     private String mServerAddress, mPassword;
+    private int mSelected = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +191,7 @@ public class BackupActivity extends Activity {
                         Log.e("Error tag", jResponse.getString("error"));
                     } else {
                         JSONArray entries = jResponse.getJSONArray("response");
-                        mAdapter = new SimpleAdapter(entries);
+                        mAdapter = new SimpleAdapter(entries, BackupActivity.this);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -226,4 +227,15 @@ public class BackupActivity extends Activity {
         });
     }
 
+    @Override
+    public void onClick(View v, int position) {
+        mSelected = position;
+        for (int i = 0; i < mBackupList.getChildCount(); i++) {
+            if (i != position) {
+                mBackupList.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.background));
+            }
+        }
+        mBackupList.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.grey));
+        mRestore.setEnabled(true);
+    }
 }
