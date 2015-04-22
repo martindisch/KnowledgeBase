@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +24,7 @@ public class BackupActivity extends Activity {
 
     private RecyclerView mBackupList;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SimpleAdapter mAdapter;
     private Button mBackup, mRestore, mSetAddress;
     private TextView mStatus;
     private String mServerAddress, mPassword;
@@ -169,7 +171,6 @@ public class BackupActivity extends Activity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    setOffline();
                 }
             }
 
@@ -177,7 +178,30 @@ public class BackupActivity extends Activity {
     }
 
     private void entries() {
-        // TODO: Load entries from server
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                String response = Util.sendCommand(mServerAddress, "{\"command\": \"entries\"}");
+                try {
+                    JSONObject jResponse = new JSONObject(Util.unescapeJava(response));
+                    if (Util.hasError(jResponse)) {
+                        Log.e("Error tag", jResponse.getString("error"));
+                    } else {
+                        JSONArray entries = jResponse.getJSONArray("response");
+                        mAdapter = new SimpleAdapter(entries);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBackupList.setAdapter(mAdapter);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void setOffline() {
@@ -196,6 +220,7 @@ public class BackupActivity extends Activity {
             public void run() {
                 mStatus.setText(R.string.server_online);
                 mStatus.setTextColor(getResources().getColor(R.color.green));
+                entries();
             }
         });
     }
