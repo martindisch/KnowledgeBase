@@ -19,6 +19,10 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder
         mCallback = callback;
     }
 
+    public JSONArray getEntries() {
+        return mEntries;
+    }
+
     @Override
     public SimpleAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);

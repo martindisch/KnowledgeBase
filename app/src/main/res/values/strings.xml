@@ -49,5 +49,8 @@
     <string name="store_success">Backup uploaded successfully</string>
     <string name="unknown_error">Unknown error</string>
     <string name="uploading">Uploading</string>
+    <string name="downloading">Downloading</string>
+    <string name="download_from_server">Downloading selected backup from server</string>
+    <string name="restored">Restored from backup</string>
 
 </resources>

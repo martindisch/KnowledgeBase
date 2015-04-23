@@ -30,6 +30,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
     private String mServerAddress, mPassword;
     private int mSelected = -1;
 
+    // TODO: Replace toasts with Snackbar
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,12 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
             @Override
             public void onClick(View v) {
                 store();
+            }
+        });
+        mRestore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                restore();
             }
         });
 
@@ -196,6 +204,53 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             @Override
                             public void run() {
                                 mBackupList.setAdapter(mAdapter);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void restore() {
+        final ProgressDialog progress = ProgressDialog.show(this, getString(R.string.downloading), getString(R.string.download_from_server), true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    String selectedDate = mAdapter.getEntries().getString(mSelected);
+                    String response = Util.sendCommand(mServerAddress, "{\"command\": \"get\", \"date\": \"" + selectedDate + "\"}");
+                    JSONObject jResponse = new JSONObject(Util.unescapeJava(response));
+                    if (Util.hasError(jResponse)) {
+                        Log.e("Error tag", jResponse.getString("error"));
+                    } else {
+                        SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("data", jResponse.getString("response"));
+                        editor.commit();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage(getString(R.string.decrypting));
+                                progress.setTitle(getString(R.string.reading));
+                            }
+                        });
+                        String plainText = Util.uDecrypt(BackupActivity.this, mPassword);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.setMessage(getString(R.string.crunching));
+                            }
+                        });
+                        PlainStorage.getInstance().setmEntries(Util.listify(plainText));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress.dismiss();
+                                Toast.makeText(BackupActivity.this, getResources().getString(R.string.restored), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
