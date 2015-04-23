@@ -10,8 +10,19 @@ class MyTCPServer(SocketServer.ThreadingTCPServer):
 class MyTCPServerHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         try:
-            # data is received in utf-8 and decoded to unicode
-            data = json.loads(self.request.recv(1024).strip().decode('utf-8'))
+            done = False
+            received = ""
+            while done != True:
+                # data is received in UTF-8 and decoded to Unicode
+                received += self.request.recv(1024).strip().decode('utf-8')
+                try:
+                    data = json.loads(received)
+                except ValueError:
+                    # if json could not be decoded, data is
+                    # probably not complete yet
+                    print "Packet received, getting more"
+                else:
+                    done = True
             if data['command'] == "ping":
                 print "Received ping"
                 self.request.sendall(json.dumps({'response': 'pong'}))
