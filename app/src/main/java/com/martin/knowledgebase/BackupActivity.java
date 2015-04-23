@@ -146,7 +146,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                     @Override
                     public void run() {
                         progress.setTitle(R.string.uploading);
-                        progress.setMessage(getResources().getString(R.string.uploading_long));
+                        progress.setMessage(getString(R.string.uploading_long));
                     }
                 });
                 SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
@@ -166,7 +166,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(BackupActivity.this, getResources().getString(R.string.store_success), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BackupActivity.this, getString(R.string.store_success), Toast.LENGTH_SHORT).show();
                                     entries();
                                 }
                             });
@@ -174,7 +174,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(BackupActivity.this, getResources().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BackupActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -188,6 +188,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
     }
 
     private void entries() {
+        mRestore.setEnabled(false);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -250,7 +251,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             @Override
                             public void run() {
                                 progress.dismiss();
-                                Toast.makeText(BackupActivity.this, getResources().getString(R.string.restored), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BackupActivity.this, getString(R.string.restored), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -292,5 +293,53 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
         }
         mBackupList.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.grey));
         mRestore.setEnabled(true);
+    }
+
+    @Override
+    public void onLongClick(View v, int position) {
+        mSelected = position;
+        for (int i = 0; i < mBackupList.getChildCount(); i++) {
+            if (i != position) {
+                mBackupList.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.background));
+            }
+        }
+        mBackupList.getChildAt(position).setBackgroundColor(getResources().getColor(R.color.grey));
+
+        AlertDialog.Builder dg = new AlertDialog.Builder(this);
+        dg.setTitle(R.string.delete);
+        dg.setMessage(R.string.confirm_delete);
+        dg.setNegativeButton(R.string.no, null);
+        dg.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final ProgressDialog progress = ProgressDialog.show(BackupActivity.this, getString(R.string.contacting), getString(R.string.asking_remove), true);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            String selectedDate = mAdapter.getEntries().getString(mSelected);
+                            String response = Util.sendCommand(mServerAddress, "{\"command\": \"delete\", \"date\": \"" + selectedDate + "\"}");
+                            JSONObject jResponse = new JSONObject(Util.unescapeJava(response));
+                            if (Util.hasError(jResponse)) {
+                                Log.e("Error tag", jResponse.getString("error"));
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        entries();
+                                        progress.dismiss();
+                                        Toast.makeText(BackupActivity.this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+        dg.show();
     }
 }

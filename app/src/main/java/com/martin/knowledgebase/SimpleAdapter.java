@@ -45,6 +45,13 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder
                     mCallback.onClick(v, position);
                 }
             });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mCallback.onLongClick(v, position);
+                    return true;
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -52,6 +59,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder
 
     public static interface OnClickListener {
         public void onClick(View v, int position);
+        public void onLongClick(View v, int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

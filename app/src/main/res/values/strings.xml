@@ -52,5 +52,11 @@
     <string name="downloading">Downloading</string>
     <string name="download_from_server">Downloading selected backup from server</string>
     <string name="restored">Restored from backup</string>
+    <string name="confirm_delete">Do you want to remove this backup from the server?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="deleted">Backup removed from server</string>
+    <string name="contacting">Contacting server</string>
+    <string name="asking_remove">Asking server to remove backup</string>
 
 </resources>
