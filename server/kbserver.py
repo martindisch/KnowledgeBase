@@ -39,6 +39,12 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
                 print "File saved"
                 self.request.sendall(json.dumps({'response': 'ok'}))
                 print "Sent ok"
+            elif data['command'] == "delete":
+                print "Received delete"
+                os.remove("store/" + data['date'])
+                print "File removed"
+                self.request.sendall(json.dumps({'response': 'ok'}))
+                print "Sent ok"
             else:
                 raise Exception("No/unknown command received")
         except Exception, e:
