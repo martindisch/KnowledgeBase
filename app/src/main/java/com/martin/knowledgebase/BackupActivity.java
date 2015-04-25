@@ -33,8 +33,6 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
     private int mSelected = -1;
     private Snackbar mSnackbar;
 
-    // TODO: Replace toasts with Snackbar
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +169,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(BackupActivity.this, getString(R.string.store_success), Toast.LENGTH_SHORT).show();
+                                    mSnackbar.setText(getString(R.string.store_success));
+                                    mSnackbar.show();
                                     entries();
                                 }
                             });
@@ -179,7 +178,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(BackupActivity.this, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+                                    mSnackbar.setText(getString(R.string.unknown_error));
+                                    mSnackbar.show();
                                 }
                             });
                         }
@@ -256,7 +256,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                             @Override
                             public void run() {
                                 progress.dismiss();
-                                Toast.makeText(BackupActivity.this, getString(R.string.restored), Toast.LENGTH_SHORT).show();
+                                mSnackbar.setText(getString(R.string.restored));
+                                mSnackbar.show();
                             }
                         });
                     }
@@ -334,7 +335,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                                     public void run() {
                                         entries();
                                         progress.dismiss();
-                                        Toast.makeText(BackupActivity.this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                                        mSnackbar.setText(getString(R.string.deleted));
+                                        mSnackbar.show();
                                     }
                                 });
                             }
