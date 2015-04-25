@@ -74,7 +74,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
         Intent i = getIntent();
         mPassword = i.getStringExtra("password");
 
-        mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), getString(R.string.store_success), this);
+        mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), this);
     }
 
     private boolean getServerAddress() {

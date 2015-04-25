@@ -36,6 +36,26 @@ public class Snackbar {
         mSnackbar.setVisibility(View.VISIBLE);
     }
 
+    public Snackbar(RelativeLayout snackbar, Context context) {
+        mSnackbar = snackbar;
+        mSnackButton = (TextView) mSnackbar.findViewById(R.id.snackbar_button);
+        mSnackText = (TextView) mSnackbar.findViewById(R.id.snackbar_text);
+
+        // I know, we're just waiting to leak a context here...
+        mContext = context;
+
+        mSnackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideSnackbar();
+            }
+        });
+
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
+        mSnackbar.setY(mSnackbar.getY() + px);
+        mSnackbar.setVisibility(View.VISIBLE);
+    }
+
     public void show() {
         float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
         moveSnackbar(px);
