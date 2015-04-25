@@ -30,7 +30,7 @@ class MyTCPServerHandler(SocketServer.BaseRequestHandler):
             elif data['command'] == "entries":
                 print "Received entries"
                 files = [f for f in os.listdir("store") if os.path.isfile(os.path.join("store", f))]
-                self.request.sendall(json.dumps({'response': list(reversed(files))}))
+                self.request.sendall(json.dumps({'response': sorted(files, reverse=True)}))
                 print "Sent entries"
             elif data['command'] == "get":
                 print "Received get"
