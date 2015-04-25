@@ -3,6 +3,7 @@ package com.martin.knowledgebase;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Path;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -21,7 +22,6 @@ public class Snackbar {
         mSnackText = (TextView) mSnackbar.findViewById(R.id.snackbar_text);
 
         mSnackText.setText(text);
-        // I know, we're just waiting to leak a context here...
         mContext = context;
 
         mSnackButton.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +41,6 @@ public class Snackbar {
         mSnackButton = (TextView) mSnackbar.findViewById(R.id.snackbar_button);
         mSnackText = (TextView) mSnackbar.findViewById(R.id.snackbar_text);
 
-        // I know, we're just waiting to leak a context here...
         mContext = context;
 
         mSnackButton.setOnClickListener(new View.OnClickListener() {
@@ -57,8 +56,12 @@ public class Snackbar {
     }
 
     public void show() {
-        float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
-        moveSnackbar(px);
+        if (mContext != null) {
+            float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
+            moveSnackbar(px);
+        } else {
+            Log.e("Snackbar", "Reference to old Context - reinstantiate Snackbar with current Context");
+        }
     }
 
     public void setText(String text) {
@@ -66,8 +69,13 @@ public class Snackbar {
     }
 
     public void hideSnackbar() {
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
-        moveSnackbar(px);
+        if (mContext != null) {
+            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
+            moveSnackbar(px);
+        }
+        else {
+            Log.e("Snackbar", "Reference to old Context - reinstantiate Snackbar with current Context");
+        }
     }
 
     private void moveSnackbar(float px) {
