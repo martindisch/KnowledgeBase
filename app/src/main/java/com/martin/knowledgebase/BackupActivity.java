@@ -3,6 +3,7 @@ package com.martin.knowledgebase;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
     private TextView mStatus;
     private String mServerAddress, mPassword;
     private int mSelected = -1;
+    private Snackbar mSnackbar;
 
     // TODO: Replace toasts with Snackbar
 
@@ -72,6 +75,8 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
 
         Intent i = getIntent();
         mPassword = i.getStringExtra("password");
+
+        mSnackbar = new Snackbar((RelativeLayout) findViewById(R.id.snackbar), getString(R.string.store_success), this);
     }
 
     private boolean getServerAddress() {

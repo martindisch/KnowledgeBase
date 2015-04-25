@@ -57,4 +57,37 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin" />
 
+    <RelativeLayout
+        android:id="@+id/snackbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="#323232"
+        android:clickable="true"
+        android:paddingBottom="18dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="18dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/snackbar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/snackbar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/snackbar_confirm"
+            android:textAllCaps="true"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:textColor="?android:colorPrimaryDark"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
