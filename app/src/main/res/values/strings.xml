@@ -47,7 +47,7 @@
     <string name="set_address">Set address</string>
     <string name="uploading_long">Uploading encrypted data</string>
     <string name="store_success">Backup uploaded successfully</string>
-    <string name="unknown_error">Unknown error</string>
+    <string name="no_store">Data could not be stored</string>
     <string name="uploading">Uploading</string>
     <string name="downloading">Downloading</string>
     <string name="download_from_server">Downloading selected backup from server</string>

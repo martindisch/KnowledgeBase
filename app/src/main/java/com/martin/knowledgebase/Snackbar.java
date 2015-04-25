@@ -72,8 +72,7 @@ public class Snackbar {
         if (mContext != null) {
             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
             moveSnackbar(px);
-        }
-        else {
+        } else {
             Log.e("Snackbar", "Reference to old Context - reinstantiate Snackbar with current Context");
         }
     }

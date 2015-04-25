@@ -3,10 +3,10 @@
     tools:context="com.martin.knowledgebase.MainActivity">
     <item
         android:id="@+id/action_search"
-        android:title="@string/search"
+        android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_search_white_48dp"
         android:showAsAction="always|collapseActionView"
-        android:actionViewClass="android.widget.SearchView"/>
+        android:title="@string/search" />
     <item
         android:id="@+id/action_save"
         android:icon="@drawable/ic_lock_white_48dp"

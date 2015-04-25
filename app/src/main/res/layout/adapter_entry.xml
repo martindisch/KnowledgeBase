@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="@dimen/activity_horizontal_margin">
 
     <TextView
+        android:id="@+id/tvLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvLeft"
-        android:text="Left"/>
+        android:text="Left" />
 
     <TextView
+        android:id="@+id/tvRight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvRight"
-        android:text="Right"
-        android:gravity="right"/>
+        android:gravity="right"
+        android:text="Right" />
 
 </LinearLayout>

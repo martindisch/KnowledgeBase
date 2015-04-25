@@ -57,9 +57,9 @@
         android:visibility="invisible">
 
         <TextView
+            android:id="@+id/snackbar_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/snackbar_text"
             android:textColor="?android:textColorPrimaryInverse"
             android:textSize="14sp" />
 
@@ -68,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textAllCaps="true"
             android:text="@string/snackbar_confirm"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textColor="?android:colorPrimaryDark"
             android:textSize="14sp" />

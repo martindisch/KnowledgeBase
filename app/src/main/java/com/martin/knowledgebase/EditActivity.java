@@ -52,8 +52,7 @@ public class EditActivity extends Activity {
                 ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
                 if (index != -1) {
                     entries.set(index, new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), uid));
-                }
-                else {
+                } else {
                     entries.add(new Entry(mTitle.getText().toString(), mText.getText().toString(), Util.getCurrentDate(), Util.getUid(this)));
                 }
                 PlainStorage.getInstance().setmEntries(entries);
