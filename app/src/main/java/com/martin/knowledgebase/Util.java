@@ -84,7 +84,7 @@ public class Util {
                     }
                 });
                 dg.show();
-            } else {
+            } else if (entries.size() > 0){
                 AesCbcWithIntegrity.SecretKeys key = generateKeyFromPassword(password, prefs.getString("salt", "Oh crap"));
                 AesCbcWithIntegrity.CipherTextIvMac civ = encrypt(stringify(entries), key);
                 SharedPreferences.Editor editor = prefs.edit();
