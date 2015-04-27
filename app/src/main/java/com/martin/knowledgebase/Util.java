@@ -52,7 +52,6 @@ public class Util {
         final ArrayList<Entry> entries = PlainStorage.getInstance().getmEntries();
 
         try {
-            // TODO: Test this method to ensure password is kept in memory, even after many activiy changes
             if (password == null) {
                 AlertDialog.Builder dg = new AlertDialog.Builder(context);
                 final EditText et = new EditText(context);
