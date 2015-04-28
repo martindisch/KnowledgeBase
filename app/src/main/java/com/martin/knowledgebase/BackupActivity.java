@@ -155,8 +155,7 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                     }
                 });
                 SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
-                // TODO: Also send salt
-                String response = Util.sendCommand(mServerAddress, "{\"command\": \"store\", \"date\": \"" + Util.getCurrentDate() + "\", \"data\": \"" + prefs.getString("data", "Oh crap") + "\"}");
+                String response = Util.sendCommand(mServerAddress, "{\"command\": \"store\", \"date\": \"" + Util.getCurrentDate() + "\", \"data\": \"" + prefs.getString("salt", "Oh crap") + "/salt" + prefs.getString("data", "Oh crap") + "\"}");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -238,8 +237,9 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
                     } else {
                         SharedPreferences prefs = getSharedPreferences("KB", MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
-                        // TODO: Also restore salt
-                        editor.putString("data", jResponse.getString("response"));
+                        String[] datasalt = jResponse.getString("response").split("/salt");
+                        editor.putString("salt", datasalt[0]);
+                        editor.putString("data", datasalt[1]);
                         editor.commit();
                         runOnUiThread(new Runnable() {
                             @Override
