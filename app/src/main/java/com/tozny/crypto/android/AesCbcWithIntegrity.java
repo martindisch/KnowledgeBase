@@ -471,9 +471,7 @@ public class AesCbcWithIntegrity {
             SecretKeys other = (SecretKeys) obj;
             if (!integrityKey.equals(other.integrityKey))
                 return false;
-            if (!confidentialityKey.equals(other.confidentialityKey))
-                return false;
-            return true;
+            return confidentialityKey.equals(other.confidentialityKey);
         }
     }
 
@@ -581,9 +579,7 @@ public class AesCbcWithIntegrity {
                 return false;
             if (!Arrays.equals(iv, other.iv))
                 return false;
-            if (!Arrays.equals(mac, other.mac))
-                return false;
-            return true;
+            return Arrays.equals(mac, other.mac);
         }
     }
 

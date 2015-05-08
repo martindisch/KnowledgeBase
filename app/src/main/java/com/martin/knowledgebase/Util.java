@@ -172,7 +172,7 @@ public class Util {
     }
 
     public static int getUid(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("KB", context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("KB", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         int uid = prefs.getInt("next_uid", 0);
         editor.putInt("next_uid", uid + 1);
@@ -231,9 +231,6 @@ public class Util {
     }
 
     public static boolean hasError(JSONObject response) {
-        if (response.has("error")) {
-            return true;
-        }
-        return false;
+        return response.has("error");
     }
 }

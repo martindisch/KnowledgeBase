@@ -57,10 +57,10 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ViewHolder
         }
     }
 
-    public static interface OnClickListener {
-        public void onClick(View v, int position);
+    public interface OnClickListener {
+        void onClick(View v, int position);
 
-        public void onLongClick(View v, int position);
+        void onLongClick(View v, int position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

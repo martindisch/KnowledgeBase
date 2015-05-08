@@ -54,9 +54,8 @@ public class Entry {
 
         if (date != null ? !date.equals(entry.date) : entry.date != null) return false;
         if (text != null ? !text.equals(entry.text) : entry.text != null) return false;
-        if (title != null ? !title.equals(entry.title) : entry.title != null) return false;
+        return !(title != null ? !title.equals(entry.title) : entry.title != null);
 
-        return true;
     }
 
     @Override
