@@ -23,9 +23,8 @@ import org.json.JSONObject;
 public class BackupActivity extends Activity implements SimpleAdapter.OnClickListener {
 
     private RecyclerView mBackupList;
-    private RecyclerView.LayoutManager mLayoutManager;
     private SimpleAdapter mAdapter;
-    private Button mBackup, mRestore, mSetAddress;
+    private Button mRestore;
     private TextView mStatus;
     private String mServerAddress, mPassword;
     private int mSelected = -1;
@@ -36,15 +35,15 @@ public class BackupActivity extends Activity implements SimpleAdapter.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
 
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mBackupList = (RecyclerView) findViewById(R.id.rvBackups);
         mBackupList.setHasFixedSize(true);
         mBackupList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
         mBackupList.setLayoutManager(mLayoutManager);
         mStatus = (TextView) findViewById(R.id.tvStatus);
-        mBackup = (Button) findViewById(R.id.bBackup);
+        Button mBackup = (Button) findViewById(R.id.bBackup);
         mRestore = (Button) findViewById(R.id.bRestore);
-        mSetAddress = (Button) findViewById(R.id.bSetAddress);
+        Button mSetAddress = (Button) findViewById(R.id.bSetAddress);
 
         mSetAddress.setOnClickListener(new View.OnClickListener() {
             @Override

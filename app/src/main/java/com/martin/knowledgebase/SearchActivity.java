@@ -16,9 +16,7 @@ import java.util.ArrayList;
 public class SearchActivity extends Activity {
 
     private RecyclerView mRecyclerView;
-    private ImageButton mFab;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Entry> results;
     private String query = "";
 
@@ -29,10 +27,10 @@ public class SearchActivity extends Activity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.container);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mFab = (ImageButton) findViewById(R.id.fab);
+        ImageButton mFab = (ImageButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
