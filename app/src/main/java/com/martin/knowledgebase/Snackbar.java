@@ -55,6 +55,7 @@ public class Snackbar {
         mSnackbar.setVisibility(View.VISIBLE);
     }
 
+    // TODO: Handle case when Snackbar already visible (don't push it further up)
     public void show() {
         if (mContext != null) {
             float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
