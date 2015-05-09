@@ -15,6 +15,7 @@ public class Snackbar {
     private RelativeLayout mSnackbar;
     private TextView mSnackButton, mSnackText;
     private Context mContext;
+    private boolean mVisible;
 
     public Snackbar(RelativeLayout snackbar, String text, Context context) {
         mSnackbar = snackbar;
@@ -34,6 +35,7 @@ public class Snackbar {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
         mSnackbar.setY(mSnackbar.getY() + px);
         mSnackbar.setVisibility(View.VISIBLE);
+        mVisible = false;
     }
 
     public Snackbar(RelativeLayout snackbar, Context context) {
@@ -53,13 +55,16 @@ public class Snackbar {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
         mSnackbar.setY(mSnackbar.getY() + px);
         mSnackbar.setVisibility(View.VISIBLE);
+        mVisible = false;
     }
 
-    // TODO: Handle case when Snackbar already visible (don't push it further up)
     public void show() {
         if (mContext != null) {
-            float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
-            moveSnackbar(px);
+            if (!mVisible) {
+                float px = -TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
+                moveSnackbar(px);
+                mVisible = true;
+            }
         } else {
             Log.e("Snackbar", "Reference to old Context - reinstantiate Snackbar with current Context");
         }
@@ -73,6 +78,7 @@ public class Snackbar {
         if (mContext != null) {
             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, mContext.getResources().getDisplayMetrics());
             moveSnackbar(px);
+            mVisible = false;
         } else {
             Log.e("Snackbar", "Reference to old Context - reinstantiate Snackbar with current Context");
         }
